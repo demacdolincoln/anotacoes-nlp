@@ -55,5 +55,5 @@ Considerei "normal" como a aplicação do SVM sem reduzir as dimensões. Estes r
 .. raw:: html
 
     <div class="notebook">
-        <a class="notebook-link" href="/files/SVD-PCA.ipynb">code</a>
+        <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/SVD-PCA.ipynb">code</a>
     </div>

@@ -12,61 +12,61 @@ cosine\_sim = \frac{\sqrt{\sum{a * b}}}{\sqrt{\sum{a^2}} * \sqrt{\sum{b^2}}}
 <div class="section" id="comparando-resultados">
 <h1>Comparando resultados</h1>
 <p>Primeiro vamos implementar cada cálculo e depois uma função que receba uma matriz, normalize os dados, e indike os &quot;k&quot; pontos mais próximos a alguma coordenada que a gente escolher. Como usaremos em outras anotações, escrevi mais linhas do que um código simples e didático deveria ter:</p>
-<table class="codetable"><tr><td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-1"> 1</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-2"> 2</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-3"> 3</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-4"> 4</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-5"> 5</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-6"> 6</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-7"> 7</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-8"> 8</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-9"> 9</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-10">10</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-11">11</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-12">12</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-13">13</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-14">14</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-15">15</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-16">16</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-17">17</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-18">18</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-19">19</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-20">20</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-21">21</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-22">22</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-23">23</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-24">24</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-25">25</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-26">26</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-27">27</a>
-<a href="#rest_code_26923e0007a54c26ade0ce5edaa2de95-28">28</a></pre></div></td><td class="code"><pre class="code python"><a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-1"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-2"></a><span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">euclidean</span><span class="p">,</span> <span class="n">cosine</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-3"></a>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-4"></a><span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-5"></a>    <span class="k">return</span> <span class="n">x</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-6"></a>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-7"></a><span class="k">def</span> <span class="nf">knn</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="s2">&quot;cos&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-8"></a>    <span class="n">data_norm</span><span class="p">,</span> <span class="n">coord_norm</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-9"></a>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-10"></a>    <span class="k">if</span> <span class="s2">&quot;coord&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-11"></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">kw</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">]])))</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-12"></a>        <span class="n">ata_norm</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-13"></a>        <span class="n">coord_norm</span> <span class="o">=</span> <span class="n">data_norm</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-14"></a>    <span class="k">else</span><span class="p">:</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-15"></a>        <span class="n">data_norm</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-16"></a>        <span class="n">coord_norm</span> <span class="o">=</span> <span class="n">data_norm</span><span class="p">[</span><span class="n">kw</span><span class="p">[</span><span class="s2">&quot;pos&quot;</span><span class="p">]]</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-17"></a>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-18"></a>    <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-19"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_norm</span><span class="p">:</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-20"></a>        <span class="k">if</span> <span class="n">func</span><span class="o">==</span><span class="s2">&quot;cos&quot;</span><span class="p">:</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-21"></a>            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cosine</span><span class="p">(</span><span class="n">coord_norm</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-22"></a>        <span class="k">else</span><span class="p">:</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-23"></a>            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">euclidean</span><span class="p">(</span><span class="n">coord_norm</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-24"></a>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-25"></a>    <span class="k">if</span> <span class="n">func</span><span class="o">==</span><span class="s2">&quot;cos&quot;</span><span class="p">:</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-26"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">res</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-27"></a>    <span class="k">else</span><span class="p">:</span>
-<a name="rest_code_26923e0007a54c26ade0ce5edaa2de95-28"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">res</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+<table class="codetable"><tr><td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-1"> 1</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-2"> 2</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-3"> 3</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-4"> 4</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-5"> 5</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-6"> 6</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-7"> 7</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-8"> 8</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-9"> 9</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-10">10</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-11">11</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-12">12</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-13">13</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-14">14</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-15">15</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-16">16</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-17">17</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-18">18</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-19">19</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-20">20</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-21">21</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-22">22</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-23">23</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-24">24</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-25">25</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-26">26</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-27">27</a>
+<a href="#rest_code_c6f6c2d12d20474aa0912a8e07360bb8-28">28</a></pre></div></td><td class="code"><pre class="code python"><a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-1"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-2"></a><span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">euclidean</span><span class="p">,</span> <span class="n">cosine</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-3"></a>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-4"></a><span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-5"></a>    <span class="k">return</span> <span class="n">x</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-6"></a>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-7"></a><span class="k">def</span> <span class="nf">knn</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="s2">&quot;cos&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-8"></a>    <span class="n">data_norm</span><span class="p">,</span> <span class="n">coord_norm</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-9"></a>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-10"></a>    <span class="k">if</span> <span class="s2">&quot;coord&quot;</span> <span class="ow">in</span> <span class="n">kw</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-11"></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">kw</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">]])))</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-12"></a>        <span class="n">ata_norm</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-13"></a>        <span class="n">coord_norm</span> <span class="o">=</span> <span class="n">data_norm</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-14"></a>    <span class="k">else</span><span class="p">:</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-15"></a>        <span class="n">data_norm</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-16"></a>        <span class="n">coord_norm</span> <span class="o">=</span> <span class="n">data_norm</span><span class="p">[</span><span class="n">kw</span><span class="p">[</span><span class="s2">&quot;pos&quot;</span><span class="p">]]</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-17"></a>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-18"></a>    <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-19"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_norm</span><span class="p">:</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-20"></a>        <span class="k">if</span> <span class="n">func</span><span class="o">==</span><span class="s2">&quot;cos&quot;</span><span class="p">:</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-21"></a>            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cosine</span><span class="p">(</span><span class="n">coord_norm</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-22"></a>        <span class="k">else</span><span class="p">:</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-23"></a>            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">euclidean</span><span class="p">(</span><span class="n">coord_norm</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-24"></a>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-25"></a>    <span class="k">if</span> <span class="n">func</span><span class="o">==</span><span class="s2">&quot;cos&quot;</span><span class="p">:</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-26"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">res</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-27"></a>    <span class="k">else</span><span class="p">:</span>
+<a name="rest_code_c6f6c2d12d20474aa0912a8e07360bb8-28"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">res</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
 </pre></td></tr></table><p>Visualizando a diferença de resultados entre as medições, gerei esse gráfico abaixo:</p>
 <a class="reference external image-reference" href="/images/eucl_vs_cos.png"><img alt="/images/eucl_vs_cos.thumbnail.png" src="/images/eucl_vs_cos.thumbnail.png" style="width: 500px;" /></a>
 <p>explicando: os pontos vermelhos representam os pontos mais próximos desse ponto amarelo cortado por uma seta são os pontos mais próximos considerando a distância euclidiana, os pontos azuis é pela similaridade de cossenos e os roxos são os que as duas métricas coincidem ao listar os mais próximos, a seta indica a inclinação do ponto amarelo em relação a origem, e é isso que a similaridade de cossenos leva em consideração, perceba que um dos pontos azuis ficou bem distante mas projetando a seta vemos que se mantém mais próximo ao ângulo do ponto amarelo que o ponto vemelho.</p>
@@ -84,5 +84,5 @@ angular\_similarity = 1-dist\_angular
 </div>
 <p>Outras vezes apenas fazem <strong>1-similaridade</strong>.</p>
 <div class="notebook">
-    <a class="notebook-link" href="/files/knn_eucl_cos.ipynb">code</a>
+    <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/knn_eucl_cos.ipynb">code</a>
 </div></div>

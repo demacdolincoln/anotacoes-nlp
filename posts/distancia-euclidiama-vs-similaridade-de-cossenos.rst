@@ -76,5 +76,5 @@ Outras vezes apenas fazem **1-similaridade**.
 .. raw:: html
 
     <div class="notebook">
-        <a class="notebook-link" href="/files/knn_eucl_cos.ipynb">code</a>
+        <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/knn_eucl_cos.ipynb">code</a>
     </div>

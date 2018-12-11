@@ -89,5 +89,5 @@ footnotes
 .. raw:: html
 
     <div class="notebook">
-        <a class="notebook-link" href="/files/preprocessing.py">code</a>
+        <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/preprocessing.py">code</a>
     </div>
