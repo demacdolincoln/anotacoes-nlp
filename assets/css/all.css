@@ -1031,7 +1031,7 @@ pre.code, code {
     background-color: cyan;
     position: fixed;
     bottom: 5%;
-    right: 20%;
+    right: 15%;
     border-radius: 50%;
     width: 100px;
     height: 100px;
@@ -1043,3 +1043,4 @@ pre.code, code {
     padding-left: 26%;
     text-transform: uppercase;
 }
+
