@@ -190,5 +190,5 @@ Observando onde cada termo está com as dimensões da camada incorporada da rede
 .. raw:: html
 
     <div class="notebook">
-        <a class="notebook-link" href="/files/word2vec-2-cbow.ipynb">code</a>
+        <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/word2vec-2-cbow.ipynb">code</a>
     </div>

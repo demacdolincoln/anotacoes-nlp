@@ -7,15 +7,15 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_vetorizacao.xml</loc>
-  <lastmod>2018-12-11T05:27:00Z</lastmod>
+  <lastmod>2018-12-11T05:45:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/utils.xml</loc>
-  <lastmod>2018-12-11T05:27:00Z</lastmod>
+  <lastmod>2018-12-11T05:45:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/word2vec.xml</loc>
-  <lastmod>2018-12-11T05:27:00Z</lastmod>
+  <lastmod>2018-12-11T05:34:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/galleries/.ipynb_checkpoints/rss.xml</loc>
@@ -27,10 +27,10 @@
  </sitemap>
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/rss.xml</loc>
-  <lastmod>2018-12-11T05:27:00Z</lastmod>
+  <lastmod>2018-12-11T05:45:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/sitemap.xml</loc>
-  <lastmod>2018-12-11T05:27:00Z</lastmod>
+  <lastmod>2018-12-11T05:45:00Z</lastmod>
  </sitemap>
 </sitemapindex>

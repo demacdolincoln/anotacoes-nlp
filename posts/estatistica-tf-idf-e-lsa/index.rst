@@ -146,5 +146,5 @@ off-topic
 .. raw:: html
 
     <div class="notebook">
-        <a class="notebook-link" href="/files/estatistica-tf-idf-e-lsa.ipynb">code</a>
+        <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/estatistica-tf-idf-e-lsa.ipynb">code</a>
     </div>
