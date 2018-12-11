@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html prefix="" lang="pt_br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Distância Euclidiama vs Similaridade de Cossenos | Anotações sobre NLP</title>
+<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/theme.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../../assets/css/screen.css">
+<link rel="stylesheet" type="text/css" href="../../assets/css/nav.css">
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic%7COpen+Sans:700,400%7CInconsolata">
+<link href="../../assets/css/ipython.min.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/nikola_ipython.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="http://demacdolincoln.github.io/anotacoes-nlp/pages/distancia-euclidiama-vs-similaridade-de-cossenos/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><script src="https://cdn.jsdelivr.net/npm/vega@4.4.0"></script><script src="https://cdn.jsdelivr.net/npm/vega-lite@2.6.0"></script><script src="https://cdn.jsdelivr.net/npm/vega-embed@3.24.2"></script><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/languages/python.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/languages/julia.min.js"></script><script>hljs.initHighlightingOnLoad();</script><script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script><meta name="author" content="Lincoln de Macêdo">
+<meta property="og:site_name" content="Anotações sobre NLP">
+<meta property="og:title" content="Distância Euclidiama vs Similaridade de Cossenos">
+<meta property="og:url" content="http://demacdolincoln.github.io/anotacoes-nlp/pages/distancia-euclidiama-vs-similaridade-de-cossenos/">
+<meta property="og:description" content="Indo direto ao ponto a principal diferença entre os cálculos é que enquanto na distância euclidiana é como se fizéssemos uma medição com uma régua entre 2 pontos, na similaridade de cossenos analisamo">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-12-07T04:04:17-03:00">
+<meta property="article:tag" content="utils">
+</head>
+<body class="nav-closed">
+
+<div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+<li class="nav-opened" role="presentation">
+            <a href="../../archive.html">Arquivo</a>
+        </li>
+        <li class="nav-opened" role="presentation">
+            <a href="../../categories/">Etiqueta</a>
+        </li>
+        <li class="nav-opened" role="presentation">
+            <a href="../../rss.xml">Feed RSS</a>
+        </li>
+    
+    
+    </ul>
+</div>
+<span class="nav-cover"></span>
+
+<div class="site-wrapper">
+    <header class="main-header post-head no-cover"><nav class="main-nav overlay clearfix"><a class="blog-logo" href="http://demacdolincoln.github.io/anotacoes-nlp/"><img src="#" alt="Blog Logo"></a>
+            <a class="menu-button" href="#"><span class="burger">☰</span><span class="word">Menu</span></a>
+        </nav></header><main id="content" class="content" role="main"><article class="post-text storypage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Distância Euclidiama vs Similaridade de Cossenos</a></h1>
+
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Indo direto ao ponto a principal diferença entre os cálculos é que enquanto na distância euclidiana é como se fizéssemos uma medição com uma régua entre 2 pontos, na similaridade de cossenos analisamos a distância angular entre 2 pontos a partir da origem, isso ficará mais claro no gráfico perto do final desta anotação.</p>
+<div class="math">
+\begin{equation*}
+dist\_eucl = \sqrt{\sum{(a-b)^2}}
+\end{equation*}
+</div>
+<div class="math">
+\begin{equation*}
+cosine\_sim = \frac{\sqrt{\sum{a * b}}}{\sqrt{\sum{a^2}} * \sqrt{\sum{b^2}}}
+\end{equation*}
+</div>
+<div class="section" id="comparando-resultados">
+<h2>Comparando resultados</h2>
+<p>Primeiro vamos implementar cada cálculo e depois uma função que receba uma matriz, normalize os dados, e indike os "k" pontos mais próximos a alguma coordenada que a gente escolher. Como usaremos em outras anotações, escrevi mais linhas do que um código simples e didático deveria ter:</p>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-1"> 1</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-2"> 2</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-3"> 3</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-4"> 4</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-5"> 5</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-6"> 6</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-7"> 7</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-8"> 8</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-9"> 9</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-10">10</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-11">11</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-12">12</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-13">13</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-14">14</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-15">15</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-16">16</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-17">17</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-18">18</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-19">19</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-20">20</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-21">21</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-22">22</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-23">23</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-24">24</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-25">25</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-26">26</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-27">27</a>
+<a href="#rest_code_d41c3cb8873e4b5584f21546ef25fd0f-28">28</a></pre></div></td>
+<td class="code"><pre class="code python"><a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-1"></a><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-2"></a><span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">euclidean</span><span class="p">,</span> <span class="n">cosine</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-3"></a>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-4"></a><span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-5"></a>    <span class="k">return</span> <span class="n">x</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-6"></a>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-7"></a><span class="k">def</span> <span class="nf">knn</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="s2">"cos"</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-8"></a>    <span class="n">data_norm</span><span class="p">,</span> <span class="n">coord_norm</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-9"></a>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-10"></a>    <span class="k">if</span> <span class="s2">"coord"</span> <span class="ow">in</span> <span class="n">kw</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-11"></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">kw</span><span class="p">[</span><span class="s2">"coord"</span><span class="p">]])))</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-12"></a>        <span class="n">ata_norm</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-13"></a>        <span class="n">coord_norm</span> <span class="o">=</span> <span class="n">data_norm</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-14"></a>    <span class="k">else</span><span class="p">:</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-15"></a>        <span class="n">data_norm</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">matrix</span><span class="p">)</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-16"></a>        <span class="n">coord_norm</span> <span class="o">=</span> <span class="n">data_norm</span><span class="p">[</span><span class="n">kw</span><span class="p">[</span><span class="s2">"pos"</span><span class="p">]]</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-17"></a>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-18"></a>    <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-19"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data_norm</span><span class="p">:</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-20"></a>        <span class="k">if</span> <span class="n">func</span><span class="o">==</span><span class="s2">"cos"</span><span class="p">:</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-21"></a>            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cosine</span><span class="p">(</span><span class="n">coord_norm</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-22"></a>        <span class="k">else</span><span class="p">:</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-23"></a>            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">euclidean</span><span class="p">(</span><span class="n">coord_norm</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-24"></a>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-25"></a>    <span class="k">if</span> <span class="n">func</span><span class="o">==</span><span class="s2">"cos"</span><span class="p">:</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-26"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">res</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-27"></a>    <span class="k">else</span><span class="p">:</span>
+<a name="rest_code_d41c3cb8873e4b5584f21546ef25fd0f-28"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">res</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+</pre></td>
+</tr></table>
+<p>Visualizando a diferença de resultados entre as medições, gerei esse gráfico abaixo:</p>
+<a class="reference external image-reference" href="../../images/eucl_vs_cos.png"><img alt="/images/eucl_vs_cos.thumbnail.png" src="../../images/eucl_vs_cos.thumbnail.png" style="width: 500px;"></a>
+<p>explicando: os pontos vermelhos representam os pontos mais próximos desse ponto amarelo cortado por uma seta são os pontos mais próximos considerando a distância euclidiana, os pontos azuis é pela similaridade de cossenos e os roxos são os que as duas métricas coincidem ao listar os mais próximos, a seta indica a inclinação do ponto amarelo em relação a origem, e é isso que a similaridade de cossenos leva em consideração, perceba que um dos pontos azuis ficou bem distante mas projetando a seta vemos que se mantém mais próximo ao ângulo do ponto amarelo que o ponto vemelho.</p>
+<p>O motivo de preferirmos usar a similaridade de cossenos a usar distância euclidiana ou outras métricas para medir distâncias é que quando trabalhamos com NLP e ainda mais quando fazemos uma redução de dimensionalidade (onde ficou claro que há rotação e distorção) os ângulos ficam mais bem preservados que as distâncias.</p>
+<p>obs: no Gensim, a similaridade é calculada com 1 passo a mais do que o demonstrado aqui, a distância angular é dada por:</p>
+<div class="math">
+\begin{equation*}
+dist\_angular = \frac{cos^-1(cos\_similarity)}{\pi}
+\end{equation*}
+</div>
+<div class="math">
+\begin{equation*}
+angular\_similarity = 1-dist\_angular
+\end{equation*}
+</div>
+</div>
+</div>
+    </div>
+    
+
+</article></main><footer class="site-footer clearfix"><section class="poweredby">Contents © 2018         <a href="mailto:demacdolincoln@gmail.com">Lincoln de Macêdo</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </section></footer>
+</div>
+
+    <script type="text/javascript" src="../../assets/js/jquery.js"></script><script type="text/javascript" src="../../assets/js/jquery.fitvids.js"></script><script type="text/javascript" src="../../assets/js/index.js"></script>
+</body>
+</html>

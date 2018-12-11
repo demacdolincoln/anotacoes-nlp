@@ -1,0 +1,211 @@
+<p>Como já dito antes, o skip-gram faz um treinamento meio que ao contrário do cbow, no treinamento a rede neural recebe as palavras centrais para tentar prever as palavras de contexto e assim ajusta os pesos das camadas da rede neural aproximando valores para palavras semelhantes no hiperplano.</p>
+<pre class="code python"><a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-1"></a><span class="n">window</span> <span class="o">=</span> <span class="mi">2</span>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-2"></a><span class="n">pair_ids</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-3"></a>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-4"></a><span class="n">text_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus_text</span><span class="p">)</span>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-5"></a>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-6"></a><span class="n">corpus_text</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">corpus_text</span><span class="p">)</span>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-7"></a><span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-8"></a>           <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">window</span><span class="p">,</span> <span class="n">window</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">]</span>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-9"></a>       <span class="p">)</span>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-10"></a>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-11"></a><span class="k">for</span> <span class="n">center_word</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">text_size</span><span class="o">-</span><span class="n">window</span><span class="p">):</span>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-12"></a>    <span class="n">center_word_id</span> <span class="o">=</span> <span class="n">word2id</span><span class="p">[</span><span class="n">corpus_text</span><span class="p">[</span><span class="n">center_word</span><span class="p">]]</span>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-13"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">corpus_text</span><span class="p">[</span><span class="n">mask</span> <span class="o">+</span> <span class="n">center_word</span><span class="p">]:</span>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-14"></a>        <span class="n">context_word_id</span> <span class="o">=</span> <span class="n">word2id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-15"></a>        <span class="n">pair_ids</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">center_word_id</span><span class="p">,</span> <span class="n">context_word_id</span><span class="p">])</span>
+<a name="rest_code_1c02ba04c5d940ec8d8697f8662ba7c7-16"></a><span class="n">pair_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pair_ids</span><span class="p">)</span>
+</pre><p>A única diferença do código acima para criar os pares de ids está na ordem: primeiro a palavra central e depois a palavra de contexto:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">central</th>
+<th class="head">contexto</th>
+<th class="head">central</th>
+<th class="head">contexto</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>604</td>
+<td>97</td>
+<td>máquina</td>
+<td>desempenhando</td>
+</tr>
+<tr><td>75</td>
+<td>302</td>
+<td>turing</td>
+<td>computação</td>
+</tr>
+<tr><td>75</td>
+<td>604</td>
+<td>turing</td>
+<td>máquina</td>
+</tr>
+<tr><td>75</td>
+<td>97</td>
+<td>turing</td>
+<td>desempenhando</td>
+</tr>
+<tr><td>75</td>
+<td>277</td>
+<td>turing</td>
+<td>papel</td>
+</tr>
+<tr><td>97</td>
+<td>604</td>
+<td>desempenhando</td>
+<td>máquina</td>
+</tr>
+<tr><td>97</td>
+<td>75</td>
+<td>desempenhando</td>
+<td>turing</td>
+</tr>
+<tr><td>97</td>
+<td>277</td>
+<td>desempenhando</td>
+<td>papel</td>
+</tr>
+<tr><td>97</td>
+<td>409</td>
+<td>desempenhando</td>
+<td>importante</td>
+</tr>
+<tr><td>277</td>
+<td>75</td>
+<td>papel</td>
+<td>turing</td>
+</tr>
+<tr><td>277</td>
+<td>97</td>
+<td>papel</td>
+<td>desempenhando</td>
+</tr>
+</tbody>
+</table>
+<p>O modelo da rede neural não se difere muito da usada no cbow, a única diferença fica por conta do tamanho da entrada da primeira função linear, já que passaremos 1 id por vez e não 4 como no cbow.</p>
+<pre class="code python"><a name="rest_code_96bac182964241b6a0d4397244b62b38-1"></a><span class="k">class</span> <span class="nc">CBOW</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">):</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-3"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">CBOW</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-4"></a>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">)</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-6"></a>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span> <span class="o">=</span>  <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">emb_size</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span> <span class="c1"># única diferença aqui</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">)</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-9"></a>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">log_softmax</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LogSoftmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-11"></a>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-12"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-13"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-14"></a>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-15"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-16"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-17"></a>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-18"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-19"></a>        <span class="k">return</span> <span class="n">out</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-20"></a>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-21"></a>    <span class="k">def</span> <span class="nf">get_word_emb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_id</span><span class="p">):</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-22"></a>        <span class="n">word</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([</span><span class="n">word_id</span><span class="p">])</span>
+<a name="rest_code_96bac182964241b6a0d4397244b62b38-23"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre><p>De modo geral o nível de erro (ou perda, nunca sei ao certo como traduzir &quot;loss&quot; neste contexto) no skip-gram é maior que no cbow, mas repito que o importante é que esteja havendo um aprendizado e não que a rede neural se adapte ao ponto de prever todas as palavras relacionadas ainda que ocasionalmente isso ocorra, para nós interessa o seguinte movimento: numa época a rede neural elevar os valores das palavras próximas na saída e afastar as mais distantes, assim naturalmente ela vai aprendendo a agrupar palavras em regiões de um hiperplano aproximando ou afastando de acordo com o modo como as palavras são usadas, tendendo a manter um distanciamento relacionado ao seu valor semântico.</p>
+<img alt="/images/word2vec-skipgram-loss.png" src="/images/word2vec-skipgram-loss.png" />
+<p>Reduzindo as dimensões para visualizar a distribuição...</p>
+<img alt="/images/word2vec-skipgram-1.png" src="/images/word2vec-skipgram-1.png" style="width: 500px;" />
+<p>Logicamente dessa forma como implementei, o custo/perda/loss é mais alto que na implementação feita do cbow, afinal vamos aos poucos ajustando 4 resultados possíveis para cada termo. Neste exemplo aumentei a quantidade de épocas para 2500 e ainda assim ficou imensamente distante do resultado da implementação do cbow neste aspecto, porém a relação entre as palavras se mostrou um pouco melhor ainda que longe do ideal.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">rank sim cos</th>
+<th class="head"><ul class="first last simple">
+<li></li>
+</ul>
+</th>
+<th class="head">rank dist eucl</th>
+<th class="head"><ul class="first last simple">
+<li></li>
+</ul>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>muitos</td>
+<td>0.14544</td>
+<td>muitos</td>
+<td>0.07375</td>
+</tr>
+<tr><td>poderia</td>
+<td>0.26087</td>
+<td>code</td>
+<td>0.08692</td>
+</tr>
+<tr><td>ceruzzi</td>
+<td>0.28141</td>
+<td>ceruzzi</td>
+<td>0.08939</td>
+</tr>
+<tr><td>code</td>
+<td>0.28206</td>
+<td>condados</td>
+<td>0.09595</td>
+</tr>
+<tr><td>britânica</td>
+<td>0.28430</td>
+<td>mortem</td>
+<td>0.09709</td>
+</tr>
+<tr><td>mortem</td>
+<td>0.33544</td>
+<td>atos</td>
+<td>0.10284</td>
+</tr>
+<tr><td>condenado</td>
+<td>0.33660</td>
+<td>teórica</td>
+<td>0.10357</td>
+</tr>
+<tr><td>comerciantes</td>
+<td>0.33929</td>
+<td>condenado</td>
+<td>0.10376</td>
+</tr>
+<tr><td>cabeceira</td>
+<td>0.34548</td>
+<td>rápido</td>
+<td>0.10433</td>
+</tr>
+<tr><td>condados</td>
+<td>0.36041</td>
+<td>prazer</td>
+<td>0.10648</td>
+</tr>
+</tbody>
+</table>
+<img alt="/images/word2vec-skipgram-rank.png" src="/images/word2vec-skipgram-rank.png" />
+<p>Só lembrando que segui o mesmo padrão de cores:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">amarelo:</th><td class="field-body">Palavra escolhida</td>
+</tr>
+<tr class="field"><th class="field-name">vermelho:</th><td class="field-body">Termos mais próximos pela similaridade de cossenos</td>
+</tr>
+<tr class="field"><th class="field-name">azul:</th><td class="field-body">Termos mais próximos pela distância euclidiana</td>
+</tr>
+<tr class="field"><th class="field-name">roxo:</th><td class="field-body">Termos que ambas as métricas concordam</td>
+</tr>
+</tbody>
+</table>
+<div class="notebook">
+    <a class="notebook-link" href="/files/word2vec-3-skipgram.ipynb">code</a>
+</div>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html prefix="" lang="pt_br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Word2Vec 1: Introdução | Anotações sobre NLP</title>
+<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/dark.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/theme.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono" rel="stylesheet">
+<link href="../../assets/css/ipython.min.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/nikola_ipython.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/word2vec-1-introducao/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><script src="https://cdn.jsdelivr.net/npm/vega@4.4.0"></script><script src="https://cdn.jsdelivr.net/npm/vega-lite@2.6.0"></script><script src="https://cdn.jsdelivr.net/npm/vega-embed@3.24.2"></script><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/languages/python.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/languages/julia.min.js"></script><script>hljs.initHighlightingOnLoad();</script><script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script><meta name="author" content="Lincoln de Macêdo">
+<link rel="prev" href="../pre-processamento-de-textos/" title="Pré-processamento de textos" type="text/html">
+<link rel="next" href="../word2vec-2-cbow/" title="Word2Vec 2: CBOW" type="text/html">
+<meta property="og:site_name" content="Anotações sobre NLP">
+<meta property="og:title" content="Word2Vec 1: Introdução">
+<meta property="og:url" content="http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/word2vec-1-introducao/">
+<meta property="og:description" content="O Word2Vec parte de uma idéia muito simples e até certo ponto bastante lógica: relacionar uma palavra com as que estão em sua volta num texto. A partir desse conceito tão básico o Word2Vec acaba sendo">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-12-06T06:13:12-03:00">
+<meta property="article:tag" content="word2vec">
+</head>
+<body class="hack dark">
+
+<a href="#content" class="sr-only sr-only-focusable">Pular para o conteúdo principal</a>
+    <div id="container">
+         
+    <header id="header"><h1 id="brand"><a href="http://demacdolincoln.github.io/anotacoes-nlp/posts/" title="Anotações sobre NLP" rel="home">
+
+        <span id="blog-title">Anotações sobre NLP</span>
+    </a></h1>
+
+        
+
+        
+    <nav id="menu"><ul>
+<li><a href="../../archive.html">Arquivo</a></li>
+                <li><a href="../../categories/">Etiqueta</a></li>
+                <li><a href="../../rss.xml">Feed RSS</a></li>
+
+    
+
+    
+    
+    </ul></nav></header><main id="content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Word2Vec 1: Introdução</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Lincoln de Macêdo
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2018-12-06T06:13:12-03:00" itemprop="datePublished" title="2018-12-06 06:13">2018-12-06 06:13</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/word2vec-1-introducao.html">Comments</a>
+
+
+            
+        </p>
+<p class="sourceline"><a href="index.rst" class="sourcelink">Código</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>O Word2Vec parte de uma idéia muito simples e até certo ponto bastante lógica: relacionar uma palavra com as que estão em sua volta num texto. A partir desse conceito tão básico o Word2Vec acaba sendo uma base para outros algoritmos e não necessariamente um fim em si, a partir dele vamos implementar o cbow e o skip-gram nas anotações seguintes, por hora, vamos entender como funciona a criação dos pares que são a base do Word2Vec.</p>
+<div class="section" id="pares">
+<h2>Pares</h2>
+<p>vamos imaginar que já tenhamos feito todo o processo descrito no post de introdução a esta série. O que buscamos nesta etapa é apenas definir uma "janela" que será a quantidade de palavras vizinhas à uma palavra que chamaremos de central e criar pares ligando essa palavra central às vizinhas, lógico que no código real trabalharemos com ids que representam palavras e não com as palavras em si.</p>
+<p>ex.:</p>
+<p><cite>O cachorro comeu o trabalho da faculdade de novo</cite></p>
+<p>considerando a janela <cite>w = 2</cite> teríamos:</p>
+<pre class="code python"><a name="rest_code_526626d3c7ba4139898d9ed63345cd8b-1"></a><span class="p">[</span>
+<a name="rest_code_526626d3c7ba4139898d9ed63345cd8b-2"></a>    <span class="p">(</span><span class="s2">"comeu"</span><span class="p">,</span> <span class="s2">"o"</span><span class="p">),</span>
+<a name="rest_code_526626d3c7ba4139898d9ed63345cd8b-3"></a>    <span class="p">(</span><span class="s2">"comeu"</span><span class="p">,</span> <span class="s2">"cachorro"</span><span class="p">),</span>
+<a name="rest_code_526626d3c7ba4139898d9ed63345cd8b-4"></a>    <span class="p">(</span><span class="s2">"comeu"</span><span class="p">,</span> <span class="s2">"o"</span><span class="p">),</span>
+<a name="rest_code_526626d3c7ba4139898d9ed63345cd8b-5"></a>    <span class="p">(</span><span class="s2">"comeu"</span><span class="p">,</span> <span class="s2">"trabalho"</span><span class="p">),</span>
+<a name="rest_code_526626d3c7ba4139898d9ed63345cd8b-6"></a>    <span class="o">...</span>
+<a name="rest_code_526626d3c7ba4139898d9ed63345cd8b-7"></a><span class="p">]</span>
+</pre>
+<p>Coisas óbvias a se deduzir: a partir da palavra central, as vezes que ela aparece é sempre <cite>2*w</cite> e em relação às vizinhas, que chamamos de palavras de contexto, a proporção sempre será de <cite>2*w</cite> para cada palavra central, isso será importante para o cbow e para o skip-gram.</p>
+<p>Traduzindo esse procedimento bem básico em código, teremos:</p>
+<pre class="code python"><a name="rest_code_0be0045f8c264a74b819777352ed8f76-1"></a><span class="n">w</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># janela (window)</span>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-2"></a><span class="n">pair_ids</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-3"></a>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-4"></a><span class="n">text_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-5"></a>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-6"></a><span class="n">corpus_text</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-7"></a><span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">w</span><span class="p">,</span> <span class="n">w</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">])</span>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-8"></a>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-9"></a><span class="k">for</span> <span class="n">center_word</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">text_size</span><span class="o">-</span><span class="n">w</span><span class="p">):</span>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-10"></a>    <span class="n">center_word_id</span> <span class="o">=</span> <span class="n">word2id</span><span class="p">[</span><span class="n">corpus_text</span><span class="p">[</span><span class="n">center_word</span><span class="p">]]</span>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-11"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">[</span><span class="n">mask</span> <span class="o">+</span> <span class="n">center_word</span><span class="p">]:</span>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-12"></a>        <span class="n">context_word_id</span> <span class="o">=</span> <span class="n">word2id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-13"></a>        <span class="n">pair_ids</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">center_word_id</span><span class="p">,</span> <span class="n">context_word_id</span><span class="p">])</span>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-14"></a>
+<a name="rest_code_0be0045f8c264a74b819777352ed8f76-15"></a><span class="n">pair_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pair_ids</span><span class="p">)</span>
+</pre>
+<p>Esse será exatamente o código que teremos no método skip-gram. Mas por enquanto vamos aproveitar os métodos que usam o word2vec já implementados e vamos ver o que podemos extrair deles:</p>
+</div>
+<div class="section" id="gensim">
+<h2>Gensim</h2>
+<p>No Gensim as operações são muito simples, basta passar para ele o texto processado de acordo com a introdução a este material:</p>
+<pre class="code python"><a name="rest_code_d0cdd617174b4940954cc31c2f6f0a22-1"></a><span class="n">model_sg</span> <span class="o">=</span> <span class="n">gensim</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Word2Vec</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="n">min_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">compute_loss</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">sg</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a name="rest_code_d0cdd617174b4940954cc31c2f6f0a22-2"></a><span class="n">model_cb</span> <span class="o">=</span> <span class="n">gensim</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Word2Vec</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="n">min_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">compute_loss</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">sg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre>
+<p>No momento de criar o objeto, a única diferença nos parâmetros usados é no <cite>sg</cite> que a essa altura já está claro que signfica skip-gram e em vez de usar True ou False, usamos 1 ou 0 para definir qual método será usado.</p>
+<p>A diferença real deles está no input e output pois ambos, cbow e skip-gram, são apenas redes neurais com pouquíssima diferença entre si como será visto posteiormente.</p>
+<p>No cbow buscamos predizer a palavra central a partir das palavras de contexto e no skip-gram fazemos o contrário, a partir da palavra central buscamos prever as palavras de contexto.</p>
+<pre class="code python"><a name="rest_code_a82057057918435989831cfafe22a7ae-1"></a><span class="n">model_sg</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="n">total_examples</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">),</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<a name="rest_code_a82057057918435989831cfafe22a7ae-2"></a><span class="n">model_cb</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="n">total_examples</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">),</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre>
+<p>Na prática, a função do treinamento é, a partir da proximidade entre as palavras, as camadas da rede neural vão se ajustando o que acaba indicando a proximidade de sentido entre elas, indo para um exemplo clássico queremos que seja possível, através de uma distribuição no plano cartesiano que o meio do caminho entre as palavras "rei" e "mulher" seja "rainha".</p>
+<p>## visualizando</p>
+<p>Primeiro vamos ver as dimensões na saída para cada palavra:</p>
+<pre class="code python"><a name="rest_code_c5bedb88ad364abf92cec5c13f9eb077-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">model_sg</span><span class="p">[</span><span class="s2">"turing"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<a name="rest_code_c5bedb88ad364abf92cec5c13f9eb077-2"></a><span class="p">(</span><span class="mi">100</span><span class="p">,)</span>
+</pre>
+<p>Como podemos perceber, nos é impossível fazer uma visualização de algo em 100 dimensões, para reduzi para 2 dimensões vamos usar o sklearn com a classe PCA, como o sklearn mantém o mesmo procedimento para praticamente tudo, vou me abster de colocar o código aqui que pode ser visto no jupyter notebook com o código completo. O importante é que ao final teremos esses gráficos para cada método:</p>
+<p>obs: queria fazer algo mais interativo mas não consegui no momento</p>
+<img alt="/images/word2vec-1.png" src="../../images/word2vec-1.png"><p>O Gensim já tem métodos nos objetos formados para encontrar as palavras mais próximas usando a similaridade de cossenos:</p>
+<pre class="code python"><a name="rest_code_bc40e2e6e9494a90b2c258f0ec39f150-1"></a><span class="c1"># repare que quanto mais próximo de 1, mais similar</span>
+<a name="rest_code_bc40e2e6e9494a90b2c258f0ec39f150-2"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">w</span> <span class="o">=</span> <span class="s2">"cianeto"</span>
+<a name="rest_code_bc40e2e6e9494a90b2c258f0ec39f150-3"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">model_sg</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<a name="rest_code_bc40e2e6e9494a90b2c258f0ec39f150-4"></a><span class="p">[(</span><span class="s1">'corpo'</span><span class="p">,</span> <span class="mf">0.9956434965133667</span><span class="p">),</span>
+<a name="rest_code_bc40e2e6e9494a90b2c258f0ec39f150-5"></a> <span class="p">(</span><span class="s1">'envenenamento'</span><span class="p">,</span> <span class="mf">0.9950364828109741</span><span class="p">),</span>
+<a name="rest_code_bc40e2e6e9494a90b2c258f0ec39f150-6"></a> <span class="p">(</span><span class="s1">'apesar'</span><span class="p">,</span> <span class="mf">0.9946295022964478</span><span class="p">),</span>
+<a name="rest_code_bc40e2e6e9494a90b2c258f0ec39f150-7"></a> <span class="p">(</span><span class="s1">'aparente'</span><span class="p">,</span> <span class="mf">0.9940468668937683</span><span class="p">),</span>
+<a name="rest_code_bc40e2e6e9494a90b2c258f0ec39f150-8"></a> <span class="p">(</span><span class="s1">'presença'</span><span class="p">,</span> <span class="mf">0.9939732551574707</span><span class="p">),</span>
+<a name="rest_code_bc40e2e6e9494a90b2c258f0ec39f150-9"></a> <span class="p">(</span><span class="s1">'descoberto'</span><span class="p">,</span> <span class="mf">0.9937050342559814</span><span class="p">),</span>
+<a name="rest_code_bc40e2e6e9494a90b2c258f0ec39f150-10"></a> <span class="p">(</span><span class="s1">'níveis'</span><span class="p">,</span> <span class="mf">0.9936593770980835</span><span class="p">),</span>
+<a name="rest_code_bc40e2e6e9494a90b2c258f0ec39f150-11"></a> <span class="p">(</span><span class="s1">'quanto'</span><span class="p">,</span> <span class="mf">0.993450403213501</span><span class="p">),</span>
+<a name="rest_code_bc40e2e6e9494a90b2c258f0ec39f150-12"></a> <span class="p">(</span><span class="s1">'testada'</span><span class="p">,</span> <span class="mf">0.9933900833129883</span><span class="p">),</span>
+<a name="rest_code_bc40e2e6e9494a90b2c258f0ec39f150-13"></a> <span class="p">(</span><span class="s1">'determinar'</span><span class="p">,</span> <span class="mf">0.9930295944213867</span><span class="p">)]</span>
+</pre>
+<p>Agora comparando o CBOW e o Skip-Gram:</p>
+<pre class="code python"><a name="rest_code_a6cd946b1b774f6a90a6200fdcaa2eec-1"></a><span class="n">w</span> <span class="o">=</span> <span class="s2">"morte"</span>
+<a name="rest_code_a6cd946b1b774f6a90a6200fdcaa2eec-2"></a>
+<a name="rest_code_a6cd946b1b774f6a90a6200fdcaa2eec-3"></a><span class="n">sg_similar</span> <span class="o">=</span> <span class="n">model_sg</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">similar_by_word</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<a name="rest_code_a6cd946b1b774f6a90a6200fdcaa2eec-4"></a><span class="n">cb_similar</span> <span class="o">=</span> <span class="n">model_cb</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">similar_by_word</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<a name="rest_code_a6cd946b1b774f6a90a6200fdcaa2eec-5"></a>
+<a name="rest_code_a6cd946b1b774f6a90a6200fdcaa2eec-6"></a><span class="n">md</span> <span class="o">=</span> <span class="s2">"| skip-gram | cbow |</span><span class="se">\n</span><span class="s2">|--|--|</span><span class="se">\n</span><span class="s2">"</span>
+<a name="rest_code_a6cd946b1b774f6a90a6200fdcaa2eec-7"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sg_similar</span><span class="p">,</span> <span class="n">cb_similar</span><span class="p">):</span>
+<a name="rest_code_a6cd946b1b774f6a90a6200fdcaa2eec-8"></a>    <span class="n">md</span> <span class="o">+=</span> <span class="n">f</span><span class="s2">"| {i[0][0]} |  {i[1][0]} |</span><span class="se">\n</span><span class="s2">"</span>
+<a name="rest_code_a6cd946b1b774f6a90a6200fdcaa2eec-9"></a>
+<a name="rest_code_a6cd946b1b774f6a90a6200fdcaa2eec-10"></a><span class="n">Markdown</span><span class="p">(</span><span class="n">md</span><span class="p">)</span>
+</pre>
+<table border="1" class="docutils">
+<colgroup>
+<col width="59%">
+<col width="41%">
+</colgroup>
+<thead valign="bottom"><tr>
+<th class="head">skip-gram</th>
+<th class="head">cbow</th>
+</tr></thead>
+<tbody valign="top">
+<tr>
+<td>causa</td>
+<td>turing</td>
+</tr>
+<tr>
+<td>defende</td>
+<td>maçã</td>
+</tr>
+<tr>
+<td>setembro</td>
+<td>suicídio</td>
+</tr>
+<tr>
+<td>acidental</td>
+<td>após</td>
+</tr>
+<tr>
+<td>estabeleceu</td>
+<td>cianeto</td>
+</tr>
+<tr>
+<td>campanha</td>
+<td>computador</td>
+</tr>
+<tr>
+<td>necessariamente</td>
+<td>onde</td>
+</tr>
+<tr>
+<td>copeland</td>
+<td>ser</td>
+</tr>
+<tr>
+<td>suicídio</td>
+<td>anos</td>
+</tr>
+<tr>
+<td>resultado</td>
+<td>ter</td>
+</tr>
+</tbody>
+</table>
+<div class="notebook">
+    <a class="notebook-link" href="../../files/word2vec-1-introducao.ipynb">code</a>
+</div>
+</div>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/word2vec/" rel="tag">word2vec</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../pre-processamento-de-textos/" rel="prev" title="Pré-processamento de textos">Post anterior</a>
+            </li>
+            <li class="next">
+                <a href="../word2vec-2-cbow/" rel="next" title="Word2Vec 2: CBOW">Próximo post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comentários</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="demacdolincoln",
+            disqus_url="http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/word2vec-1-introducao/",
+        disqus_title="Word2Vec 1: Introdu\u00e7\u00e3o",
+        disqus_identifier="cache/posts/word2vec-1-introducao.html",
+        disqus_config = function () {
+            this.language = "pt_br";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="demacdolincoln";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script></main><footer id="footer"><p>Contents © 2018         <a href="mailto:demacdolincoln@gmail.com">Lincoln de Macêdo</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+            
+        </footer>
+</div>
+    
+    
+
+    
+    
+    
+</body>
+</html>

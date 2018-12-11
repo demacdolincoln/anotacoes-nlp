@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html prefix="" lang="pt_br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Pré-processamento de textos | Anotações sobre NLP</title>
+<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/dark.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/theme.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono" rel="stylesheet">
+<link href="../../assets/css/ipython.min.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/nikola_ipython.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/pre-processamento-de-textos/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><script src="https://cdn.jsdelivr.net/npm/vega@4.4.0"></script><script src="https://cdn.jsdelivr.net/npm/vega-lite@2.6.0"></script><script src="https://cdn.jsdelivr.net/npm/vega-embed@3.24.2"></script><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/languages/python.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/languages/julia.min.js"></script><script>hljs.initHighlightingOnLoad();</script><script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script><meta name="author" content="Lincoln de Macêdo">
+<link rel="prev" href="../" title="README" type="text/html">
+<link rel="next" href="../word2vec-1-introducao/" title="Word2Vec 1: Introdução" type="text/html">
+<meta property="og:site_name" content="Anotações sobre NLP">
+<meta property="og:title" content="Pré-processamento de textos">
+<meta property="og:url" content="http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/pre-processamento-de-textos/">
+<meta property="og:description" content="Este é o processo padrão usado em praticamente todas as anotações relacionadas à NLP:
+
+limpar o texto:
+remover pontuação, acentos, e stop-words [1]
+colocar tudo em minúsculas
+
+
+converter numa lista de">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-12-06T03:03:53-03:00">
+<meta property="article:tag" content="utils">
+</head>
+<body class="hack dark">
+
+<a href="#content" class="sr-only sr-only-focusable">Pular para o conteúdo principal</a>
+    <div id="container">
+         
+    <header id="header"><h1 id="brand"><a href="http://demacdolincoln.github.io/anotacoes-nlp/posts/" title="Anotações sobre NLP" rel="home">
+
+        <span id="blog-title">Anotações sobre NLP</span>
+    </a></h1>
+
+        
+
+        
+    <nav id="menu"><ul>
+<li><a href="../../archive.html">Arquivo</a></li>
+                <li><a href="../../categories/">Etiqueta</a></li>
+                <li><a href="../../rss.xml">Feed RSS</a></li>
+
+    
+
+    
+    
+    </ul></nav></header><main id="content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Pré-processamento de textos</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Lincoln de Macêdo
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2018-12-06T03:03:53-03:00" itemprop="datePublished" title="2018-12-06 03:03">2018-12-06 03:03</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/pre-processamento-de-textos.html">Comments</a>
+
+
+            
+        </p>
+<p class="sourceline"><a href="index.rst" class="sourcelink">Código</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Este é o processo padrão usado em praticamente todas as anotações relacionadas à NLP:</p>
+<ol class="arabic simple">
+<li>limpar o texto:<ul>
+<li>remover pontuação, acentos, e stop-words <a class="footnote-reference" href="#id2" id="id1">[1]</a>
+</li>
+<li>colocar tudo em minúsculas</li>
+</ul>
+</li>
+<li>converter numa lista de termos usados.</li>
+</ol>
+<p>A única excessão é com o TF-IDF e LSA e comparo quando o processamento é feito dividindo em parágrafos e com o texto inteiro de uma vez.</p>
+<p>Sempre usarei textos da wikipédia, pelo simples motivo de ser muito prático e inteiramente legal.</p>
+<div class="section" id="bibliotecas-usadas">
+<h2>bibliotecas usadas</h2>
+<pre class="code python"><a name="rest_code_3bc60b40828349ffbb1fac68228055ea-1"></a><span class="o">%</span><span class="n">pylab</span> <span class="n">inline</span>
+<a name="rest_code_3bc60b40828349ffbb1fac68228055ea-2"></a><span class="kn">import</span> <span class="nn">nltk</span>
+<a name="rest_code_3bc60b40828349ffbb1fac68228055ea-3"></a><span class="kn">import</span> <span class="nn">gensim</span>
+<a name="rest_code_3bc60b40828349ffbb1fac68228055ea-4"></a><span class="kn">import</span> <span class="nn">wikipedia</span>
+</pre>
+<p>No Jupyter notebook o comando <strong>%pylab</strong> importa o matplotlib e numpy e configura o modo como os gráficos serão apresentados, ocasionalmente também usarei o Altair junto com o Pandas para visualizar os dados.</p>
+</div>
+<div class="section" id="pre-processamento">
+<h2>Pré-processamento</h2>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_6400b3ee4fb2448490e9e3400744b5bf-1"> 1</a>
+<a href="#rest_code_6400b3ee4fb2448490e9e3400744b5bf-2"> 2</a>
+<a href="#rest_code_6400b3ee4fb2448490e9e3400744b5bf-3"> 3</a>
+<a href="#rest_code_6400b3ee4fb2448490e9e3400744b5bf-4"> 4</a>
+<a href="#rest_code_6400b3ee4fb2448490e9e3400744b5bf-5"> 5</a>
+<a href="#rest_code_6400b3ee4fb2448490e9e3400744b5bf-6"> 6</a>
+<a href="#rest_code_6400b3ee4fb2448490e9e3400744b5bf-7"> 7</a>
+<a href="#rest_code_6400b3ee4fb2448490e9e3400744b5bf-8"> 8</a>
+<a href="#rest_code_6400b3ee4fb2448490e9e3400744b5bf-9"> 9</a>
+<a href="#rest_code_6400b3ee4fb2448490e9e3400744b5bf-10">10</a>
+<a href="#rest_code_6400b3ee4fb2448490e9e3400744b5bf-11">11</a>
+<a href="#rest_code_6400b3ee4fb2448490e9e3400744b5bf-12">12</a></pre></div></td>
+<td class="code"><pre class="code python"><a name="rest_code_6400b3ee4fb2448490e9e3400744b5bf-1"></a><span class="n">wikipedia</span><span class="o">.</span><span class="n">set_lang</span><span class="p">(</span><span class="s2">"pt"</span><span class="p">)</span>
+<a name="rest_code_6400b3ee4fb2448490e9e3400744b5bf-2"></a><span class="n">text</span> <span class="o">=</span> <span class="n">wikipedia</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"Alan_Turing"</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
+<a name="rest_code_6400b3ee4fb2448490e9e3400744b5bf-3"></a>
+<a name="rest_code_6400b3ee4fb2448490e9e3400744b5bf-4"></a><span class="n">sentences</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="rest_code_6400b3ee4fb2448490e9e3400744b5bf-5"></a>
+<a name="rest_code_6400b3ee4fb2448490e9e3400744b5bf-6"></a><span class="n">stop_words</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"portuguese"</span><span class="p">)</span> <span class="o">+</span>\
+<a name="rest_code_6400b3ee4fb2448490e9e3400744b5bf-7"></a>             <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"english"</span><span class="p">)</span>
+<a name="rest_code_6400b3ee4fb2448490e9e3400744b5bf-8"></a>
+<a name="rest_code_6400b3ee4fb2448490e9e3400744b5bf-9"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+<a name="rest_code_6400b3ee4fb2448490e9e3400744b5bf-10"></a>    <span class="n">clean_text</span> <span class="o">=</span> <span class="n">gensim</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">simple_preprocess</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<a name="rest_code_6400b3ee4fb2448490e9e3400744b5bf-11"></a>    <span class="n">clean_text</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">clean_text</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">]</span>
+<a name="rest_code_6400b3ee4fb2448490e9e3400744b5bf-12"></a>    <span class="n">sentences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clean_text</span><span class="p">)</span>
+</pre></td>
+</tr></table>
+<p>Explicando as etapas do código acima:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top">
+<tr class="field">
+<th class="field-name">linhas 6 e 7:</th>
+<td class="field-body">lista de stop-words, como no texto há termos em inglês, juntei as duas listas (termos em português e em inglês) numa só.</td>
+</tr>
+<tr class="field">
+<th class="field-name">for:</th>
+<td class="field-body">
+<strong>splitlines</strong> vai dividir o texto em parágrafod e a função <strong>simple_preprocess()</strong> do Gensim remove pontuação e converte tudo para minúsculas, em seguida removo as stop words e por último adiciono o parágrafo à lista de sentenças usadas no texto.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="facilitando-as-coisas">
+<h2>Facilitando as coisas</h2>
+<p>Para dar maior foco ao que importa, salvei a lista de termos usando o pickle:</p>
+<pre class="code python"><a name="rest_code_74027c78de65465587bf568e4dad0202-1"></a><span class="kn">import</span> <span class="nn">pickle</span>
+<a name="rest_code_74027c78de65465587bf568e4dad0202-2"></a>
+<a name="rest_code_74027c78de65465587bf568e4dad0202-3"></a><span class="c1"># salvando em arquivo</span>
+<a name="rest_code_74027c78de65465587bf568e4dad0202-4"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"sentences.pickle"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<a name="rest_code_74027c78de65465587bf568e4dad0202-5"></a>   <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+<a name="rest_code_74027c78de65465587bf568e4dad0202-6"></a>   <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<a name="rest_code_74027c78de65465587bf568e4dad0202-7"></a>
+<a name="rest_code_74027c78de65465587bf568e4dad0202-8"></a><span class="c1"># lendo do arquivo</span>
+<a name="rest_code_74027c78de65465587bf568e4dad0202-9"></a><span class="n">sentences</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+<a name="rest_code_74027c78de65465587bf568e4dad0202-10"></a>   <span class="nb">open</span><span class="p">(</span><span class="s2">"sentences.pickle"</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span>
+<a name="rest_code_74027c78de65465587bf568e4dad0202-11"></a><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="footnotes">
+<h2>footnotes</h2>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup>
+<col class="label">
+<col>
+</colgroup>
+<tbody valign="top"><tr>
+<td class="label"><a class="fn-backref" href="#id1">[1]</a></td>
+<td>stop words são as palavras sem valor semântico ao que pretendemos fazer, são palavras como "eu", "está", "era", "têm", etc. São palavras de uso tão comum e frequente que acabaria por ofuscar a presença de palavras mais relevantes no processo de classificação de textos por exemplo, afinal para saber o sentido de frases como "Alan Turing é o pai da ciência da computação" basta apenas as palavras ["Alan", "Turing", "pai", "ciência", "computação"], isso é o que basta para uma máquina.</td>
+</tr></tbody>
+</table>
+<p><a class="reference external" href="../../">teste</a></p>
+<div class="notebook">
+    <a class="notebook-link" href="../../files/preprocessing.py">code</a>
+</div>
+</div>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/utils/" rel="tag">utils</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../" rel="prev" title="README">Post anterior</a>
+            </li>
+            <li class="next">
+                <a href="../word2vec-1-introducao/" rel="next" title="Word2Vec 1: Introdução">Próximo post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comentários</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="demacdolincoln",
+            disqus_url="http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/pre-processamento-de-textos/",
+        disqus_title="Pr\u00e9-processamento de textos",
+        disqus_identifier="cache/posts/pre-processamento-de-textos.html",
+        disqus_config = function () {
+            this.language = "pt_br";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="demacdolincoln";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script></main><footer id="footer"><p>Contents © 2018         <a href="mailto:demacdolincoln@gmail.com">Lincoln de Macêdo</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+            
+        </footer>
+</div>
+    
+    
+
+    
+    
+    
+</body>
+</html>

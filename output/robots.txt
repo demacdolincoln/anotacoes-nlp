@@ -1,0 +1,4 @@
+Sitemap: http://demacdolincoln.github.io/anotacoes-nlp/posts/sitemapindex.xml
+
+User-Agent: *
+Host: demacdolincoln.github.io

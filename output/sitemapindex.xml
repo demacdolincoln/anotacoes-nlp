@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+                        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+ <sitemap>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_vetorizacao.xml</loc>
+  <lastmod>2018-12-11T05:27:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/utils.xml</loc>
+  <lastmod>2018-12-11T05:27:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/word2vec.xml</loc>
+  <lastmod>2018-12-11T05:27:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/galleries/.ipynb_checkpoints/rss.xml</loc>
+  <lastmod>2018-12-11T05:27:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/galleries/rss.xml</loc>
+  <lastmod>2018-12-11T05:27:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/rss.xml</loc>
+  <lastmod>2018-12-11T05:27:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/sitemap.xml</loc>
+  <lastmod>2018-12-11T05:27:00Z</lastmod>
+ </sitemap>
+</sitemapindex>
