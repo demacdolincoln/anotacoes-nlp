@@ -5,7 +5,7 @@ STOP_RENDERING = runtime.STOP_RENDERING
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 10
-_modified_time = 1544509834.8305447
+_modified_time = 1544509859.0506725
 _enable_loop = True
 _template_filename = '/home/lincoln/.local/lib/python3.7/site-packages/nikola/data/themes/base/templates/pagination_helper.tmpl'
 _template_uri = 'pagination_helper.tmpl'
@@ -27,8 +27,8 @@ def render_body(context,**pageargs):
 def render_page_navigation(context,current_page,page_links,prevlink,nextlink,prev_next_links_reversed,surrounding=5):
     __M_caller = context.caller_stack._push_frame()
     try:
-        enumerate = context.get('enumerate', UNDEFINED)
         len = context.get('len', UNDEFINED)
+        enumerate = context.get('enumerate', UNDEFINED)
         abs = context.get('abs', UNDEFINED)
         __M_writer = context.writer()
         __M_writer('\n<div class="page-navigation">\n')
