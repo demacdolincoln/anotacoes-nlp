@@ -2,7 +2,7 @@ from nltk.corpus import stopwords
 from gensim.utils import simple_preprocess
 import re
 
-def preprocessing(texts=[], lang=["portuguese", "english"])
+def preprocessing(texts=[], lang=["portuguese", "english"]):
     original_text, corpus_text = [], []
 
     stop_words = []
@@ -20,10 +20,10 @@ def preprocessing(texts=[], lang=["portuguese", "english"])
     
     # remove empty corpus
     empty_lines = reversed([i for i, j in enumerate(corpus_text) if len(j) == 0])
-    
-    for i, original, corpus in zip(empty_lines, original_text, corpus_text):
-        original.pop(i)
-        corpus.pop(i)
+#     import ipdb; ipdb.set_trace()
+    for i in empty_lines:
+        original_text.pop(i)
+        corpus_text.pop(i)
     
     return original_text, corpus_text
 
@@ -41,6 +41,6 @@ if __name__ == '__main__':
        pickle.dump(corpus_text, f)
        f.close()
     
-    with open("original_text-{page_title}.pickle", "wb") as f:
+    with open(f"original_text-{page_title}.pickle", "wb") as f:
         pickle.dump(original_text, f)
         f.close()
