@@ -15,7 +15,7 @@
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/archive.html</loc>
-  <lastmod>2018-12-25T08:22:00Z</lastmod>
+  <lastmod>2018-12-25T23:45:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/</loc>
@@ -59,11 +59,11 @@
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/index-1.html</loc>
-  <lastmod>2018-12-25T16:19:00Z</lastmod>
+  <lastmod>2018-12-25T23:46:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/</loc>
-  <lastmod>2018-12-25T08:22:00Z</lastmod>
+  <lastmod>2018-12-25T23:45:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/classificacao-1/</loc>
@@ -88,6 +88,10 @@
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/pre-processamento-de-textos/</loc>
   <lastmod>2018-12-11T06:32:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/resumos-0-pagerank/</loc>
+  <lastmod>2018-12-25T23:45:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/seq2seq-implementacao/</loc>

@@ -19,7 +19,7 @@
 <link rel="next" href="index-1.html" type="text/html">
 <!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><script src="https://cdn.jsdelivr.net/npm/vega@4.4.0"></script><script src="https://cdn.jsdelivr.net/npm/vega-lite@2.6.0"></script><script src="https://cdn.jsdelivr.net/npm/vega-embed@3.24.2"></script><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/languages/python.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/languages/julia.min.js"></script><script>hljs.initHighlightingOnLoad();</script><script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
-</script><link rel="prefetch" href="posts/classificacao-2-cnn/" type="text/html">
+</script><link rel="prefetch" href="posts/resumos-0-pagerank/" type="text/html">
 </head>
 <body class="hack dark">
 
@@ -44,7 +44,97 @@
     
     
     </ul></nav></header><main id="content"><div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/classificacao-2-cnn/" class="u-url">Classificação 2: CNN</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/resumos-0-pagerank/" class="u-url">Resumos 0: PageRank</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Lincoln de Macêdo
+            </span></p>
+            <p class="dateline">
+            <a href="posts/resumos-0-pagerank/" rel="bookmark">
+            <time class="published dt-published" datetime="2018-12-25T13:31:18-03:00" itemprop="datePublished" title="2018-12-25 13:31">2018-12-25 13:31</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="posts/resumos-0-pagerank/#disqus_thread" data-disqus-identifier="cache/posts/resumos-0-pagerank.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <div>
+<p>Esta é uma anotação introdutória ao problema de resumir textos, o ponto principal abordado aqui será a dificuldade de identificar o que é relevante, para isso usei o textrank, não entrarei em muitos detalhes sobre esse algoritmo, tratando de forma intuitiva a idéia geral que será mais aprofundada em anotações posteriores.</p>
+<p>PageRank foi o primeiro algoritmo usado pelo google para rankear os links de sua busca, logicamente o google evoluiu neste tempo todo e usa uma combinação de vários algoritmos e não o pagerank puro, aqui o usaremos para rankear os parágrafos de um texto da wikipedia.</p>
+<div class="section" id="funcionamento">
+<h2>Funcionamento</h2>
+<p>Não entrarei em muitos detalhes sobre o algoritmo, então explicando de forma superficial temos o fato do pagerank se valer de um grafo, e ao considerar o grau de cada nó, ou seja a quantidade de conexões de cada nó, e um peso atribuído a cada conexão, teremos um ranking de importância. Até mesmo explicando desse modo já imaginamos como o algoritmo se aplica bem a links entre páginas na internet, mas para textos ele realmente não é tão adequado porém é didático como algo introdutório.</p>
+<p>Os passos do "resumo" que na verdade é um rankeamento:</p>
+<ol class="arabic simple">
+<li>extrair estatísticas do texto (<a class="reference external" href="posts/estatistica-tf-idf-e-lsa">tf-idf</a> ou <a class="reference external" href="posts/word2vec-1-introducao">word2vec</a>, enfim, qualquer coisa que nos diga algo sobre o texto)</li>
+<li>gerar uma matriz de similaridade, que na verdade servirá como matriz adjacente</li>
+<li>converter a matriz adjacente num grafo</li>
+<li>aplicar o PageRank</li>
+</ol>
+</div>
+<div class="section" id="implementacao">
+<h2>Implementação</h2>
+<p>Resolvi o skip-gram já treinado[1]_ e a página da wikipédia sobre Alan Turing como já feito antes, o processamento realmente começa criando listas com os valores correspondentes a cada palavra indicado pelo skip-gram.</p>
+<pre class="code python"><a name="rest_code_a744e6c1c50543f2bbe97ffa2ee8629b-1"></a><span class="n">sentences</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="rest_code_a744e6c1c50543f2bbe97ffa2ee8629b-2"></a>
+<a name="rest_code_a744e6c1c50543f2bbe97ffa2ee8629b-3"></a><span class="k">for</span> <span class="n">paragraph</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+<a name="rest_code_a744e6c1c50543f2bbe97ffa2ee8629b-4"></a><span class="n">sentences</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">word2id</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">paragraph</span> <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">id2word</span><span class="p">])</span>
+</pre>
+<p>O passo seguinte é criar uma matriz quadrada onde cada lado tem o nº de parágrafos, preenchi a matriz da seguinte forma:</p>
+<pre class="code python"><a name="rest_code_05977159979044a6bb90b4b5940b2c55-1"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentences</span><span class="p">):</span>
+<a name="rest_code_05977159979044a6bb90b4b5940b2c55-2"></a>    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentences</span><span class="p">):</span>
+<a name="rest_code_05977159979044a6bb90b4b5940b2c55-3"></a>        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span> <span class="p">:</span>
+<a name="rest_code_05977159979044a6bb90b4b5940b2c55-4"></a>            <span class="n">similarity_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+<a name="rest_code_05977159979044a6bb90b4b5940b2c55-5"></a>                                          <span class="n">cosine_similarity</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="n">y</span><span class="p">])</span>
+<a name="rest_code_05977159979044a6bb90b4b5940b2c55-6"></a>                                      <span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre>
+<p>O que é feito acima é apenas comparar a similaridade de cossenos entre cada parágrafo, indicando de alguma forma algum nível de similaridade, de modo que o parágrafo com maior <strong>índice de similaridade</strong> em relação aos demais será aquele que melhor representa o conjunto.</p>
+<img alt="/images/similarity_matrix-classificacao-1.png" src="images/similarity_matrix-classificacao-1.png"><p>Essa é uma matriz simétrica que seŕá lida como uma matriz adjacente de um grafo, cada linha e coluna serão nós e cada corrdenada indica o peso do vértice que liga cada nó, um dos problemas dessa estratégia é que todos os nós terão o mesmo grau, já que todos se ligam a todos, isso acaba inutilizando o uso do grau de cada nó para o pagerank, tendo como único parâmetro a considerar o peso dos vértices.</p>
+<pre class="code python"><a name="rest_code_f25b66bd621c4014856f4985349d548f-1"></a><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">from_numpy_array</span><span class="p">(</span><span class="n">similarity_matrix</span><span class="p">)</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-2"></a><span class="n">scores</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">pagerank</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-3"></a>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-4"></a><span class="n">original</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-5"></a>    <span class="nb">open</span><span class="p">(</span><span class="s2">"original_text-Alan_Turing.pickle"</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-6"></a>    <span class="p">)</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-7"></a>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-8"></a>    <span class="n">word_rank</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-9"></a>            <span class="p">[(</span><span class="n">scores</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">original</span><span class="p">)],</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-10"></a>            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-11"></a>            <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-12"></a>    <span class="p">)</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-13"></a>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-14"></a>    <span class="n">qnt_lines</span> <span class="o">=</span> <span class="mi">3</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-15"></a>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-16"></a>    <span class="n">top</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">word_rank</span><span class="p">[:</span><span class="n">qnt_lines</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-17"></a>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-18"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">qnt_lines</span><span class="p">):</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-19"></a>        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">"-- parágrafo do resumo: {i} | parágrafo original: {top[i][1]}"</span><span class="p">)</span>
+<a name="rest_code_f25b66bd621c4014856f4985349d548f-20"></a>        <span class="k">print</span><span class="p">(</span><span class="n">top</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">)</span>
+</pre>
+<p>Na saída do código acima podemos reparar que a ordem de importância dada a cada parágrafo não necessariamente está relacionado ao seu tamanho ou à sua posição no texto:
+.. epigraph:</p>
+<pre class="literal-block">
+-- parágrafo do resumo: 0 | parágrafo original: 19
+Por muitos anos, foram feitas campanhas que envolveram ativistas da tecnologia da informação, do meio político e do público LGBT. Em 11 de setembro de 2009, 55 anos após sua morte, o primeiro-ministro do Reino Unido, Gordon Brown, seguindo um pedido feito através de uma petição direcionada ao governo britânico, pediu desculpas formais em nome do governo pelo tratamento preconceituoso e desumano dado a Turing, que o levou ao suicídio. Em 24 de dezembro de 2013, passou a ter efeito a Real Prerrogativa do Perdão, concedida a Turing pela Rainha Elizabeth II, a pedido do ministro da justiça do Reino Unido, Chirs Grayling, depois que uma petição criada em 2012 obteve mais de 37.000 assinaturas solicitando o devido perdão.
+
+-- parágrafo do resumo: 1 | parágrafo original: 3
+A homossexualidade de Turing resultou em um processo criminal em 1952, pois atos homossexuais eram ilegais no Reino Unido na época, e ele aceitou o tratamento com hormônios femininos e castração química, como alternativa à prisão. Morreu em 1954, algumas semanas antes de seu aniversário de 42 anos, devido a um aparente autoadministrado envenenamento por cianeto, apesar de sua mãe (e alguns outros) terem considerado sua morte acidental. Em 10 de setembro de 2009, após uma campanha de internet, o primeiro-ministro britânico Gordon Brown fez um pedido oficial de desculpas público, em nome do governo britânico, devido à maneira pela qual Turing foi tratado após a guerra. Em 24 de dezembro de 2013, Alan Turing recebeu o perdão real da rainha Elizabeth II, da condenação por homossexualidade.
+
+-- parágrafo do resumo: 2 | parágrafo original: 12
+Em 1938, Turing se uniu ao GC&amp;CS, o braço de decodificação de mensagens da inteligência britânica, para efetuar a Criptoanálise da Máquina Enigma. O Enigma era uma máquina de codificação que mudava seus códigos diariamente, obrigando a que o projeto de decifração se tornasse bastante rápido. Após o Reino Unido iniciar a Segunda Guerra Mundial ao declarar guerra à Alemanha em 1939, Turing foi direcionado para o quartel da GC&amp;CS em Bletchley Park. A partir de uma máquina decodificadora polonesa, Turing projetou a Bomba eletromecânica ("Bombe"),  um equipamento eletromecânico que ajudaria a decriptar as mensagens do Enigma e foi montada em 1940. Novas Bombas foram construídas após Turing e sua equipe pedirem apoio a Winston Churchill, e mais de duzentas operavam ao fim da Guerra em 1945. Turing também introduziu sua equipe em Bletchley Park ao matemático Tommy Flowers, que em 1943 projetou o Colossus, um computador primitivo que ajudou a decodificar outra máquina criptográfica alemã, o Lorenz.
+</pre>
+<p>Logicamente eu poderia ter usado frases em vez de parágrafos para fazer o resumo, talvez até fizesse mais sentido chamar a saída do código de resumo, mas resolvi usar parágrafos inteiros por considerar que a idéia fica mais clara assim e ao comparar com o texto original, fica mais visualmente evidente como se deu o trabalho do pagerank, nos próximos posts sobre este tópico serão mostradas redes neurais que fazem um trabalho bem mais coerente, logicamente usarei redes neurais recorrentes e o seq2seq, portanto recomendo que veja as anotações que escrevi sobre esses temas:</p>
+<p><a class="reference external" href="posts/gru-e-lstm">GRU e LSTM</a>
+<a class="reference external" href="posts/seq2seq-introducao">seq2seq - introdução</a></p>
+<p>---</p>
+<p>[1] link</p>
+</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/classificacao-2-cnn/" class="u-url">Classificação 2: CNN</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Lincoln de Macêdo
@@ -868,281 +958,6 @@ IDF(t) = log_e(\frac{quantidade\ total\ de\ textos}{numero\ de\ textos\ em\ que\
 <p>Considerei "normal" como a aplicação do SVM sem reduzir as dimensões. Estes resultados mostram que a sobreposição de dados na redução de dimensões assim como a distorção que ocorre nas transformações feitas com as matrizes, tende a dificultar o trabalho dos algoritmos, mesmo mantendo um certo nível de fidelidade com a distribuição original dos dadosm o melhor é usar essa redução mais para visualizar do que para aplicar métricas ou classificadores, e por isso também que nas notas onde uso distância euclidiana e similaridade de cossenos, ao reduzir as dimensões os resultados parecem errados ainda que nas dimensões originais esteja correto.</p>
 <div class="notebook">
     <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/SVD-PCA.ipynb">code</a>
-</div>
-</div>
-    </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/word2vec-2-cbow/" class="u-url">Word2Vec 2: CBOW</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Lincoln de Macêdo
-            </span></p>
-            <p class="dateline">
-            <a href="posts/word2vec-2-cbow/" rel="bookmark">
-            <time class="published dt-published" datetime="2018-12-07T00:23:12-03:00" itemprop="datePublished" title="2018-12-07 00:23">2018-12-07 00:23</time></a>
-            </p>
-                <p class="commentline">
-        
-    <a href="posts/word2vec-2-cbow/#disqus_thread" data-disqus-identifier="cache/posts/word2vec-2-cbow.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="e-content entry-content">
-    <div>
-<p>Na anotação anterior vimos de forma mais ou menos prática o sentido da coisa, implementamos o Word2Vec com o objetivo de identificar a proximidade semântica entre palavras com base no uso em textos, este post é fundamentalmente teórico e a implementação do cbow aqui demonstrada está muito longe de ser algo pronto para produção, é apenas um exemplo que tenta ser didático.</p>
-<div class="section" id="preparacao-dos-dados">
-<h2>preparação dos dados</h2>
-<p>Como nosso objetivo é fazer com que uma rede neural receba as palavras de contexto e indique a palavra central, e na anotação anterior fiz uma pequena observação dizendo que sempre teremos $2w$ palavras de contexto para cada palavra central e assim faremos, vamos modificar um pouco o código que cria os pares do word2vec:</p>
-<table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="posts/word2vec-2-cbow/#rest_code_b681d05195e54117935d1c2ab3132375-1"> 1</a>
-<a href="posts/word2vec-2-cbow/#rest_code_b681d05195e54117935d1c2ab3132375-2"> 2</a>
-<a href="posts/word2vec-2-cbow/#rest_code_b681d05195e54117935d1c2ab3132375-3"> 3</a>
-<a href="posts/word2vec-2-cbow/#rest_code_b681d05195e54117935d1c2ab3132375-4"> 4</a>
-<a href="posts/word2vec-2-cbow/#rest_code_b681d05195e54117935d1c2ab3132375-5"> 5</a>
-<a href="posts/word2vec-2-cbow/#rest_code_b681d05195e54117935d1c2ab3132375-6"> 6</a>
-<a href="posts/word2vec-2-cbow/#rest_code_b681d05195e54117935d1c2ab3132375-7"> 7</a>
-<a href="posts/word2vec-2-cbow/#rest_code_b681d05195e54117935d1c2ab3132375-8"> 8</a>
-<a href="posts/word2vec-2-cbow/#rest_code_b681d05195e54117935d1c2ab3132375-9"> 9</a>
-<a href="posts/word2vec-2-cbow/#rest_code_b681d05195e54117935d1c2ab3132375-10">10</a>
-<a href="posts/word2vec-2-cbow/#rest_code_b681d05195e54117935d1c2ab3132375-11">11</a>
-<a href="posts/word2vec-2-cbow/#rest_code_b681d05195e54117935d1c2ab3132375-12">12</a>
-<a href="posts/word2vec-2-cbow/#rest_code_b681d05195e54117935d1c2ab3132375-13">13</a></pre></div></td>
-<td class="code"><pre class="code python"><a name="rest_code_b681d05195e54117935d1c2ab3132375-1"></a><span class="n">window</span> <span class="o">=</span> <span class="mi">2</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-2"></a><span class="n">pair_ids</span> <span class="o">=</span> <span class="p">[]</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-3"></a>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-4"></a><span class="n">text_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus_text</span><span class="p">)</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-5"></a>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-6"></a><span class="n">corpus_text</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">corpus_text</span><span class="p">)</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-7"></a><span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">window</span><span class="p">,</span> <span class="n">window</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">])</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-8"></a>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-9"></a><span class="k">for</span> <span class="n">center_word</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">text_size</span><span class="o">-</span><span class="n">window</span><span class="p">):</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-10"></a>    <span class="n">center_word_id</span> <span class="o">=</span> <span class="n">word2id</span><span class="p">[</span><span class="n">corpus_text</span><span class="p">[</span><span class="n">center_word</span><span class="p">]]</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-11"></a>    <span class="n">context_words</span> <span class="o">=</span> <span class="p">[</span><span class="n">word2id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">corpus_text</span><span class="p">[</span><span class="n">mask</span> <span class="o">+</span> <span class="n">center_word</span><span class="p">]]</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-12"></a>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-13"></a>    <span class="n">pair_ids</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">context_words</span><span class="p">,</span> <span class="n">center_word_id</span><span class="p">])</span>
-</pre></td>
-</tr></table>
-<p>Assim feito, teremos algo como:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="25%">
-<col width="25%">
-<col width="25%">
-<col width="25%">
-</colgroup>
-<thead valign="bottom"><tr>
-<th class="head">contexto</th>
-<th class="head">central</th>
-<th class="head">contexto</th>
-<th class="head">central</th>
-</tr></thead>
-<tbody valign="top">
-<tr>
-<td>[155, 77, 577, 495]</td>
-<td>544</td>
-<td>['armazenado', 'ace', 'turing', 'interessou']</td>
-<td>posteriormente</td>
-</tr>
-<tr>
-<td>[77, 544, 495, 233]</td>
-<td>577</td>
-<td>['ace', 'posteriormente', 'interessou', 'química']</td>
-<td>turing</td>
-</tr>
-<tr>
-<td>[544, 577, 233, 308]</td>
-<td>495</td>
-<td>['posteriormente', 'turing', 'química', 'escreveu']</td>
-<td>interessou</td>
-</tr>
-<tr>
-<td>[577, 495, 308, 446]</td>
-<td>233</td>
-<td>['turing', 'interessou', 'escreveu', 'artigo']</td>
-<td>química</td>
-</tr>
-<tr>
-<td>[495, 233, 446, 537]</td>
-<td>308</td>
-<td>['interessou', 'química', 'artigo', 'sobre']</td>
-<td>escreveu</td>
-</tr>
-<tr>
-<td>[233, 308, 537, 323]</td>
-<td>446</td>
-<td>['química', 'escreveu', 'sobre', 'base']</td>
-<td>artigo</td>
-</tr>
-<tr>
-<td>[308, 446, 323, 233]</td>
-<td>537</td>
-<td>['escreveu', 'artigo', 'base', 'química']</td>
-<td>sobre</td>
-</tr>
-<tr>
-<td>[446, 537, 233, 504]</td>
-<td>323</td>
-<td>['artigo', 'sobre', 'química', 'morfogênese']</td>
-<td>base</td>
-</tr>
-<tr>
-<td>[537, 323, 504, 506]</td>
-<td>233</td>
-<td>['sobre', 'base', 'morfogênese', 'previu']</td>
-<td>química</td>
-</tr>
-<tr>
-<td>[323, 233, 506, 492]</td>
-<td>504</td>
-<td>['base', 'química', 'previu', 'reações']</td>
-<td>morfogênese</td>
-</tr>
-<tr>
-<td>[233, 504, 492, 8]</td>
-<td>506</td>
-<td>['química', 'morfogênese', 'reações', 'químicas']</td>
-<td>previu</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section" id="a-rede-neural">
-<h2>A rede neural</h2>
-<p>O que importa na rede neural neste método e no skip-gram é a camada <em>Embedding</em></p>
-<table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-1"> 1</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-2"> 2</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-3"> 3</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-4"> 4</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-5"> 5</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-6"> 6</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-7"> 7</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-8"> 8</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-9"> 9</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-10">10</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-11">11</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-12">12</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-13">13</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-14">14</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-15">15</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-16">16</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-17">17</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-18">18</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-19">19</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-20">20</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-21">21</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-22">22</a>
-<a href="posts/word2vec-2-cbow/#rest_code_711fe1ba88cc4cbaafb806418ef3610c-23">23</a></pre></div></td>
-<td class="code"><pre class="code python"><a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-1"></a><span class="k">class</span> <span class="nc">CBOW</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">,</span> <span class="n">context_size</span><span class="p">):</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-3"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">CBOW</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-4"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-6"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span> <span class="o">=</span>  <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">emb_size</span><span class="o">*</span><span class="n">context_size</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-9"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">log_softmax</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LogSoftmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-11"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-12"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-13"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-14"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-15"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-16"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-17"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-18"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-19"></a>        <span class="k">return</span> <span class="n">out</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-20"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-21"></a>    <span class="k">def</span> <span class="nf">get_word_emb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_id</span><span class="p">):</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-22"></a>        <span class="n">word</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([</span><span class="n">word_id</span><span class="p">])</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-23"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-</pre></td>
-</tr></table>
-<p>O treinamento será demorado, afinal como já dito, este não é um código para produção, é apenas um código didático, então enquanto ocorre o treinamento, não é má idéia ir tomar um chá e caminhar um pouco.</p>
-<p>Algo que preciso ressaltar aqui é que predizer a palavra central corretamente não importa tanto, o importante é que esteja ocorrendo o aprendizado já queo que nos interessa é que os valores da camada incorporada se aproximem em palavras próximas e se distanciem para palavras distantes, então é de se esperar um gráfico horrível mostrando a evolução da perda.</p>
-<img alt="/images/word2vec-cbow-loss.png" src="images/word2vec-cbow-loss.png"><p>Para visualizar a distribuição das palavras num plano cartesiano, faremos o mesmo que com o Gensim, usaremos a implementação do PCA disponível no slearn.</p>
-<img alt="/images/word2vec-cbow-1.png" src="images/word2vec-cbow-1.png"><p>Observando a similaridade, que não é lá tão boa neste caso devido a total falta de otimização em tudo no código:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="25%">
-<col width="25%">
-<col width="25%">
-<col width="25%">
-</colgroup>
-<thead valign="bottom"><tr>
-<th class="head">rank sim cos</th>
-<th class="head"> </th>
-<th class="head">rank dist eucl</th>
-<th class="head"> </th>
-</tr></thead>
-<tbody valign="top">
-<tr>
-<td>novas</td>
-<td>0.28059</td>
-<td>novas</td>
-<td>0.09326</td>
-</tr>
-<tr>
-<td>equivalia</td>
-<td>0.31309</td>
-<td>polonesa</td>
-<td>0.09989</td>
-</tr>
-<tr>
-<td>pioneiro</td>
-<td>0.31798</td>
-<td>neve</td>
-<td>0.10029</td>
-</tr>
-<tr>
-<td>afirma</td>
-<td>0.32445</td>
-<td>andrew</td>
-<td>0.10191</td>
-</tr>
-<tr>
-<td>neve</td>
-<td>0.33447</td>
-<td>pioneiro</td>
-<td>0.10310</td>
-</tr>
-<tr>
-<td>polonesa</td>
-<td>0.33585</td>
-<td>afirma</td>
-<td>0.10484</td>
-</tr>
-<tr>
-<td>massachusetts</td>
-<td>0.34675</td>
-<td>conduzida</td>
-<td>0.10508</td>
-</tr>
-<tr>
-<td>conduzida</td>
-<td>0.34768</td>
-<td>bombas</td>
-<td>0.10641</td>
-</tr>
-<tr>
-<td>andrew</td>
-<td>0.35143</td>
-<td>manipular</td>
-<td>0.10718</td>
-</tr>
-<tr>
-<td>hastings</td>
-<td>0.35665</td>
-<td>homossexuais</td>
-<td>0.11074</td>
-</tr>
-</tbody>
-</table>
-<p>Observando onde cada termo está com as dimensões da camada incorporada da rede neural reduzida a 2d temos:</p>
-<img alt="/images/word2vec-cbow-rank.png" src="images/word2vec-cbow-rank.png"><p>É compreensível ver estas distâncias tão em desarcodo pelo fato das distorções da redução de dimensões, de 10 para 2.</p>
-<div class="notebook">
-    <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/word2vec-2-cbow.ipynb">code</a>
-</div>
 </div>
 </div>
     </div>

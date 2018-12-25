@@ -24,6 +24,7 @@ Pretendo fazer uma longa série de posts sobre NLP, não sou especialista nisso 
     * `classificacao 2: CNN <link://filename/posts/classificacao-2-cnn.rst>`_
 
 * parte 3: modelagem
+    * `resumos 0: pagerank <link://filename/posts/resumos-0-pagerank.rst>`_
     * `seq2seq: implementação <link://filename/posts/seq2seq-implementacao.rst>`_
 
 * utils
