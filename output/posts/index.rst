@@ -16,13 +16,21 @@ Pretendo fazer uma longa série de posts sobre NLP, não sou especialista nisso 
     * `word2vec 2: cbow <link://filename/posts/word2vec-2-cbow.rst>`_
     * `word2vec 3: skip-gram <link://filename/posts/word2vec-3-skip-gram.rst>`_
     * *glove*
-    * *seq2seq*
+    * `seq2seq: introdução <link://filename/posts/seq2seq-introducao.rst>`_
     * *notas finais e comparações entre métodos*
+
+* parte 2: classificação
+    * `classificação 1: introdução <link://filename/posts/classificacao-1.rst>`_
+    * `classificacao 2: CNN <link://filename/posts/classificacao-2-cnn.rst>`_
+
+* parte 3: modelagem
+    * `seq2seq: implementação <link://filename/posts/seq2seq-implementacao.rst>`_
 
 * utils
     * `Pré-processamento de textos <link://filename/posts/pre-processamento-de-textos.rst>`_. (*muito importante*)
     * `SVD vs PCA <link://filename/posts/svd-vs-pca.rst>`_
-    * `distância euclidiana vs similaridade de cossenos <link://filename/posts/distancia-eucliciana-vs-similaridade-de-cossenos.rst>`_
+    * `distância euclidiana vs similaridade de cossenos <link://filename/posts/distancia-euclidiama-vs-similaridade-de-cossenos.rst>`_
+    * `GRU e LSTM <link://filename/posts/gru-e-lstm.rst>`_
 
 Obs1.: O pré-processamento é a etapa inicial de praticamente todos os conteúdos aqui escritos, é realmente muito importante, por isso antes de partir para qualquer outro conteúdo, leia ele primeiro.
 

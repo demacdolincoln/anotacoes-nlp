@@ -16,8 +16,8 @@ Esse seria o caminho mais óbvio, tendo em vista que temos uma representação e
 
 1. peguei 2 textos da wikipedia: 
 
-     a) `Lutefisk <https://pt.wikipedia.org/wiki/Lutefisk>` - um prato da culinária norueguesa
-     b) `Erhu <https://pt.wikipedia.org/wiki/Erhu>` - um instrumento tradicional chinês
+     a) `Lutefisk <https://pt.wikipedia.org/wiki/Lutefisk>`_ - um prato da culinária norueguesa
+     b) `Erhu <https://pt.wikipedia.org/wiki/Erhu>`_ - um instrumento tradicional chinês
 
 2. fiz o pré-processamento das palavras como já descrito em outro post, ficando apenas com o vocabulário
 3. peguei as posições correspondentes a cada palavra no skip-gram já treinado
