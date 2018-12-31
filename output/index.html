@@ -78,41 +78,41 @@
 <div class="section" id="implementacao">
 <h2>Implementação</h2>
 <p>Resolvi o skip-gram já treinado[1]_ e a página da wikipédia sobre Alan Turing como já feito antes, o processamento realmente começa criando listas com os valores correspondentes a cada palavra indicado pelo skip-gram.</p>
-<pre class="code python"><a name="rest_code_4178932a0fe8451cafb24644318cb03f-1"></a><span class="n">sentences</span> <span class="o">=</span> <span class="p">[]</span>
-<a name="rest_code_4178932a0fe8451cafb24644318cb03f-2"></a>
-<a name="rest_code_4178932a0fe8451cafb24644318cb03f-3"></a><span class="k">for</span> <span class="n">paragraph</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
-<a name="rest_code_4178932a0fe8451cafb24644318cb03f-4"></a><span class="n">sentences</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">word2id</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">paragraph</span> <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">id2word</span><span class="p">])</span>
+<pre class="code python"><a name="rest_code_7f655bc01807478aaf8481b70fbbbc42-1"></a><span class="n">sentences</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="rest_code_7f655bc01807478aaf8481b70fbbbc42-2"></a>
+<a name="rest_code_7f655bc01807478aaf8481b70fbbbc42-3"></a><span class="k">for</span> <span class="n">paragraph</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+<a name="rest_code_7f655bc01807478aaf8481b70fbbbc42-4"></a><span class="n">sentences</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">word2id</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">paragraph</span> <span class="k">if</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">id2word</span><span class="p">])</span>
 </pre>
 <p>O passo seguinte é criar uma matriz quadrada onde cada lado tem o nº de parágrafos, preenchi a matriz da seguinte forma:</p>
-<pre class="code python"><a name="rest_code_ba3ca6655cab4d40b616d91e1107a896-1"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentences</span><span class="p">):</span>
-<a name="rest_code_ba3ca6655cab4d40b616d91e1107a896-2"></a>    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentences</span><span class="p">):</span>
-<a name="rest_code_ba3ca6655cab4d40b616d91e1107a896-3"></a>        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span> <span class="p">:</span>
-<a name="rest_code_ba3ca6655cab4d40b616d91e1107a896-4"></a>            <span class="n">similarity_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-<a name="rest_code_ba3ca6655cab4d40b616d91e1107a896-5"></a>                                          <span class="n">cosine_similarity</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="n">y</span><span class="p">])</span>
-<a name="rest_code_ba3ca6655cab4d40b616d91e1107a896-6"></a>                                      <span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_d8741e6eb8c448659e1aecdaddf604bc-1"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentences</span><span class="p">):</span>
+<a name="rest_code_d8741e6eb8c448659e1aecdaddf604bc-2"></a>    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentences</span><span class="p">):</span>
+<a name="rest_code_d8741e6eb8c448659e1aecdaddf604bc-3"></a>        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span> <span class="p">:</span>
+<a name="rest_code_d8741e6eb8c448659e1aecdaddf604bc-4"></a>            <span class="n">similarity_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+<a name="rest_code_d8741e6eb8c448659e1aecdaddf604bc-5"></a>                                          <span class="n">cosine_similarity</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="n">y</span><span class="p">])</span>
+<a name="rest_code_d8741e6eb8c448659e1aecdaddf604bc-6"></a>                                      <span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre>
 <p>O que é feito acima é apenas comparar a similaridade de cossenos entre cada parágrafo, indicando de alguma forma algum nível de similaridade, de modo que o parágrafo com maior <strong>índice de similaridade</strong> em relação aos demais será aquele que melhor representa o conjunto.</p>
 <img alt="/images/similarity_matrix-classificacao-1.png" src="images/similarity_matrix-classificacao-1.png"><p>Essa é uma matriz simétrica que seŕá lida como uma matriz adjacente de um grafo, cada linha e coluna serão nós e cada corrdenada indica o peso do vértice que liga cada nó, um dos problemas dessa estratégia é que todos os nós terão o mesmo grau, já que todos se ligam a todos, isso acaba inutilizando o uso do grau de cada nó para o pagerank, tendo como único parâmetro a considerar o peso dos vértices.</p>
-<pre class="code python"><a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-1"></a><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">from_numpy_array</span><span class="p">(</span><span class="n">similarity_matrix</span><span class="p">)</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-2"></a><span class="n">scores</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">pagerank</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-3"></a>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-4"></a><span class="n">original</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-5"></a>    <span class="nb">open</span><span class="p">(</span><span class="s2">"original_text-Alan_Turing.pickle"</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-6"></a>    <span class="p">)</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-7"></a>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-8"></a>    <span class="n">word_rank</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-9"></a>            <span class="p">[(</span><span class="n">scores</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">original</span><span class="p">)],</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-10"></a>            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-11"></a>            <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-12"></a>    <span class="p">)</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-13"></a>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-14"></a>    <span class="n">qnt_lines</span> <span class="o">=</span> <span class="mi">3</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-15"></a>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-16"></a>    <span class="n">top</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">word_rank</span><span class="p">[:</span><span class="n">qnt_lines</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-17"></a>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-18"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">qnt_lines</span><span class="p">):</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-19"></a>        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">"-- parágrafo do resumo: {i} | parágrafo original: {top[i][1]}"</span><span class="p">)</span>
-<a name="rest_code_e253ce07f8e6479394d2cdd9dc093823-20"></a>        <span class="k">print</span><span class="p">(</span><span class="n">top</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-1"></a><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">from_numpy_array</span><span class="p">(</span><span class="n">similarity_matrix</span><span class="p">)</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-2"></a><span class="n">scores</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">pagerank</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-3"></a>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-4"></a><span class="n">original</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-5"></a>    <span class="nb">open</span><span class="p">(</span><span class="s2">"original_text-Alan_Turing.pickle"</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-6"></a>    <span class="p">)</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-7"></a>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-8"></a>    <span class="n">word_rank</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-9"></a>            <span class="p">[(</span><span class="n">scores</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">original</span><span class="p">)],</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-10"></a>            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-11"></a>            <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-12"></a>    <span class="p">)</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-13"></a>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-14"></a>    <span class="n">qnt_lines</span> <span class="o">=</span> <span class="mi">3</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-15"></a>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-16"></a>    <span class="n">top</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">word_rank</span><span class="p">[:</span><span class="n">qnt_lines</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-17"></a>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-18"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">qnt_lines</span><span class="p">):</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-19"></a>        <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">"-- parágrafo do resumo: {i} | parágrafo original: {top[i][1]}"</span><span class="p">)</span>
+<a name="rest_code_987e3760b0b646bb83d961a7d99e45cd-20"></a>        <span class="k">print</span><span class="p">(</span><span class="n">top</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s2">"</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">)</span>
 </pre>
 <p>Na saída do código acima podemos reparar que a ordem de importância dada a cada parágrafo não necessariamente está relacionado ao seu tamanho ou à sua posição no texto:
 .. epigraph:</p>
@@ -130,7 +130,7 @@ Em 1938, Turing se uniu ao GC&amp;CS, o braço de decodificação de mensagens d
 <p><a class="reference external" href="posts/gru-e-lstm">GRU e LSTM</a>
 <a class="reference external" href="posts/seq2seq-introducao">seq2seq: introdução</a></p>
 <p>---</p>
-<p>_[1] link</p>
+<p>_[1] <a class="reference external" href="http://www.nilc.icmc.usp.br/nilc/index.php/repositorio-de-word-embeddings-do-nilc">http://www.nilc.icmc.usp.br/nilc/index.php/repositorio-de-word-embeddings-do-nilc</a></p>
 </div>
 </div>
     </div>
@@ -243,7 +243,7 @@ Unknown target name: "2".</div>
         </p>
 </div>
     </header><div class="e-content entry-content">
-    <p>Escreva o seu comentário aqui.</p>
+    <span></span>
     </div>
     </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/seq2seq-introducao/" class="u-url">Seq2Seq - Introdução</a></h1>
         <div class="metadata">
