@@ -17,7 +17,11 @@ Devido a esse mecanismo ser claramente um gerenciamento de memória e estarmos t
 Portões
 -------
 
-.. image:: https://commons.wikimedia.org/wiki/File:The_LSTM_cell.png#/media/File:The_LSTM_cell.png
+.. image:: https://upload.wikimedia.org/wikipedia/commons/3/3b/The_LSTM_cell.png
+
+.. image:: https://upload.wikimedia.org/wikipedia/commons/3/37/Gated_Recurrent_Unit%2C_base_type.svg
+
+
 
 Traduzindo as funções expostas na imagem acima disponível na wikipedia representando uma célula de memória LTSM:
 
@@ -41,8 +45,8 @@ Todo o mecanismo de preservação e esquecimento desses métodos se baseia nesse
 artigos e links recomendados
 ----------------------------
 
-[1] `Learning to Forget: Continual Prediction with LSTM ( Felix A. Gers , Jürgen Schmidhuber , Fred Cummins ) <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.55.5709>`
+.. [1] `Learning to Forget: Continual Prediction with LSTM ( Felix A. Gers , Jürgen Schmidhuber , Fred Cummins ) <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.55.5709>`
 
-[2] `Long short-term memory (Sepp Hochreiter; Jürgen Schmidhuber) <https://www.researchgate.net/profile/Sepp_Hochreiter/publication/13853244_Long_Short-term_Memory/links/5700e75608aea6b7746a0624/Long-Short-term-Memory.pdf?origin=publication_detail>`
+.. [2] `Long short-term memory (Sepp Hochreiter; Jürgen Schmidhuber) <https://www.researchgate.net/profile/Sepp_Hochreiter/publication/13853244_Long_Short-term_Memory/links/5700e75608aea6b7746a0624/Long-Short-term-Memory.pdf?origin=publication_detail>`
 
-[3] `Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation ( Cho, Kyunghyun; van Merrienboer, Bart; Gulcehre, Caglar; Bahdanau, Dzmitry; Bougares, Fethi; Schwenk, Holger; Bengio, Yoshua) <https://arxiv.org/pdf/1406.1078v3.pdf>`
+.. [3] `Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation ( Cho, Kyunghyun; van Merrienboer, Bart; Gulcehre, Caglar; Bahdanau, Dzmitry; Bougares, Fethi; Schwenk, Holger; Bengio, Yoshua) <https://arxiv.org/pdf/1406.1078v3.pdf>`
