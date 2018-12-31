@@ -6,31 +6,47 @@
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_classificacao.xml</loc>
+  <lastmod>2018-12-25T16:18:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_cnn.xml</loc>
+  <lastmod>2018-12-25T16:11:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_seq2seq.xml</loc>
+  <lastmod>2018-12-31T17:59:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_utils.xml</loc>
+  <lastmod>2018-12-25T08:22:00Z</lastmod>
+ </sitemap>
+ <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_vetorizacao.xml</loc>
-  <lastmod>2018-12-11T05:45:00Z</lastmod>
+  <lastmod>2018-12-25T08:22:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/classificacao.xml</loc>
+  <lastmod>2018-12-25T16:11:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/modelagem.xml</loc>
+  <lastmod>2018-12-31T17:59:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/utils.xml</loc>
-  <lastmod>2018-12-11T05:45:00Z</lastmod>
+  <lastmod>2018-12-25T16:12:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/word2vec.xml</loc>
-  <lastmod>2018-12-11T05:34:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/galleries/.ipynb_checkpoints/rss.xml</loc>
-  <lastmod>2018-12-11T05:27:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/galleries/rss.xml</loc>
-  <lastmod>2018-12-11T05:27:00Z</lastmod>
+  <lastmod>2018-12-25T08:22:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/rss.xml</loc>
-  <lastmod>2018-12-11T05:45:00Z</lastmod>
+  <lastmod>2018-12-31T17:59:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/sitemap.xml</loc>
-  <lastmod>2018-12-11T05:45:00Z</lastmod>
+  <lastmod>2018-12-31T17:59:00Z</lastmod>
  </sitemap>
 </sitemapindex>

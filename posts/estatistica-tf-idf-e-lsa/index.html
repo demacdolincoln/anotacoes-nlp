@@ -107,83 +107,83 @@ IDF(t) = log_e(\frac{quantidade\ total\ de\ textos}{numero\ de\ textos\ em\ que\
 <h2>TF-IDF</h2>
 <p>Como quase tudo no sklearn...</p>
 <table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-1"> 1</a>
-<a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-2"> 2</a>
-<a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-3"> 3</a>
-<a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-4"> 4</a>
-<a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-5"> 5</a>
-<a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-6"> 6</a>
-<a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-7"> 7</a>
-<a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-8"> 8</a>
-<a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-9"> 9</a>
-<a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-10">10</a>
-<a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-11">11</a>
-<a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-12">12</a>
-<a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-13">13</a>
-<a href="#rest_code_86cf65c0cc1a4462b7cacfae2b316612-14">14</a></pre></div></td>
-<td class="code"><pre class="code python"><a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-1"></a><span class="kn">import</span> <span class="nn">wikipedia</span>
-<a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-2"></a><span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
-<a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-3"></a><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
-<a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-4"></a>
-<a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-5"></a><span class="n">stopw</span> <span class="o">=</span> <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"portuguese"</span><span class="p">)</span> <span class="o">+</span>\
-<a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-6"></a>        <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"english"</span><span class="p">)</span>
-<a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-7"></a>
-<a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-8"></a><span class="n">wikipedia</span><span class="o">.</span><span class="n">set_lang</span><span class="p">(</span><span class="s2">"pt"</span><span class="p">)</span>
-<a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-9"></a><span class="n">text</span> <span class="o">=</span> <span class="n">wikipedia</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"Alan_Turing"</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
-<a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-10"></a>
-<a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-11"></a><span class="n">tfidf</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="n">stopw</span><span class="p">)</span>
-<a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-12"></a>
-<a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-13"></a><span class="n">X</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span>
-<a name="rest_code_86cf65c0cc1a4462b7cacfae2b316612-14"></a><span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-1"> 1</a>
+<a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-2"> 2</a>
+<a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-3"> 3</a>
+<a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-4"> 4</a>
+<a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-5"> 5</a>
+<a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-6"> 6</a>
+<a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-7"> 7</a>
+<a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-8"> 8</a>
+<a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-9"> 9</a>
+<a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-10">10</a>
+<a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-11">11</a>
+<a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-12">12</a>
+<a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-13">13</a>
+<a href="#rest_code_34e6594eb158474ab1576df2ac03ec24-14">14</a></pre></div></td>
+<td class="code"><pre class="code python"><a name="rest_code_34e6594eb158474ab1576df2ac03ec24-1"></a><span class="kn">import</span> <span class="nn">wikipedia</span>
+<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-2"></a><span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-3"></a><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-4"></a>
+<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-5"></a><span class="n">stopw</span> <span class="o">=</span> <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"portuguese"</span><span class="p">)</span> <span class="o">+</span>\
+<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-6"></a>        <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"english"</span><span class="p">)</span>
+<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-7"></a>
+<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-8"></a><span class="n">wikipedia</span><span class="o">.</span><span class="n">set_lang</span><span class="p">(</span><span class="s2">"pt"</span><span class="p">)</span>
+<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-9"></a><span class="n">text</span> <span class="o">=</span> <span class="n">wikipedia</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"Alan_Turing"</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
+<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-10"></a>
+<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-11"></a><span class="n">tfidf</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="n">stopw</span><span class="p">)</span>
+<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-12"></a>
+<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-13"></a><span class="n">X</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span>
+<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-14"></a><span class="n">X</span><span class="o">.</span><span class="n">shape</span>
 </pre></td>
 </tr></table>
 <p>Na penúltima linha usei o <cite>splitlines</cite> para dividir o texto em parágrafos, assim podemos posteriormente coletar informações sobre os termos relevantes para cada parágrafo, mas admito esta forma ser demasiadamente simplista pois neste caso acabo considerando subtítulos como parágrafos.</p>
 <p>Internamente, o objeto que criamos, durante o treinamento, armazena um dicionário com as palavras e um "id", vamos usar isso para converter os termos:</p>
-<pre class="code python"><a name="rest_code_9eb85230e8f9479b87500de79292b9ac-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">X</span>
-<a name="rest_code_9eb85230e8f9479b87500de79292b9ac-2"></a><span class="o">&lt;</span><span class="mi">61</span><span class="n">x664</span> <span class="n">sparse</span> <span class="n">matrix</span> <span class="n">of</span> <span class="nb">type</span> <span class="s1">'&lt;class '</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="s1">'&gt;'</span>
-<a name="rest_code_9eb85230e8f9479b87500de79292b9ac-3"></a>    <span class="k">with</span> <span class="mi">862</span> <span class="n">stored</span> <span class="n">elements</span> <span class="ow">in</span> <span class="n">Compressed</span> <span class="n">Sparse</span> <span class="n">Row</span> <span class="n">format</span><span class="o">&gt;</span>
+<pre class="code python"><a name="rest_code_13bdd8d59ba844dcbc93ff2b1ac1af6c-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">X</span>
+<a name="rest_code_13bdd8d59ba844dcbc93ff2b1ac1af6c-2"></a><span class="o">&lt;</span><span class="mi">61</span><span class="n">x664</span> <span class="n">sparse</span> <span class="n">matrix</span> <span class="n">of</span> <span class="nb">type</span> <span class="s1">'&lt;class '</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="s1">'&gt;'</span>
+<a name="rest_code_13bdd8d59ba844dcbc93ff2b1ac1af6c-3"></a>    <span class="k">with</span> <span class="mi">862</span> <span class="n">stored</span> <span class="n">elements</span> <span class="ow">in</span> <span class="n">Compressed</span> <span class="n">Sparse</span> <span class="n">Row</span> <span class="n">format</span><span class="o">&gt;</span>
 </pre>
 <p>A matriz esparsa tem diversas vantagens quando tratamos com longos arrays rechados de zeros, talvez o produto principal nessa implementação seja exatamente essa matriz que indica em cada parágrafo quais os termos presentes e a sua frequência, que é o ponto principal do TF-IDF.</p>
 <img alt="visualização da matriz resultante" src="../../images/lsa.png"><p>E é exatamente sobre essa matriz que chegamos no LSA (Latent Semantic Analysis), mas antes vamos ver quais as palavras mais relevantes do primeiro parágrafo:</p>
-<pre class="code python"><a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">ft_name</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">()</span>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-2"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">top_tfidf</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-3"></a><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_tfidf</span><span class="p">[:</span><span class="mi">10</span><span class="p">]:</span>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-4"></a>        <span class="k">print</span><span class="p">(</span><span class="n">ft_name</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-5"></a>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-6"></a><span class="n">computação</span>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-7"></a><span class="n">cheshire</span>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-8"></a><span class="n">junho</span>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-9"></a><span class="n">ciência</span>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-10"></a><span class="n">influente</span>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-11"></a><span class="n">algoritmo</span>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-12"></a><span class="n">east</span>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-13"></a><span class="n">lógico</span>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-14"></a><span class="n">desenvolvimento</span>
-<a name="rest_code_7cba51629a1f4294ad78ea97f105b02f-15"></a><span class="n">desempenhando</span>
+<pre class="code python"><a name="rest_code_160098d8b64746b1997153fbce992da6-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">ft_name</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">()</span>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-2"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">top_tfidf</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-3"></a><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_tfidf</span><span class="p">[:</span><span class="mi">10</span><span class="p">]:</span>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-4"></a>        <span class="k">print</span><span class="p">(</span><span class="n">ft_name</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-5"></a>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-6"></a><span class="n">computação</span>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-7"></a><span class="n">cheshire</span>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-8"></a><span class="n">junho</span>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-9"></a><span class="n">ciência</span>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-10"></a><span class="n">influente</span>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-11"></a><span class="n">algoritmo</span>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-12"></a><span class="n">east</span>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-13"></a><span class="n">lógico</span>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-14"></a><span class="n">desenvolvimento</span>
+<a name="rest_code_160098d8b64746b1997153fbce992da6-15"></a><span class="n">desempenhando</span>
 </pre>
 <p>O ft_name é a lista de termos que irá converter para string a posição do termo indicada quando ordenamos o array comtendo o valor calculado para cada termo devolvendo as respectivas posições.</p>
 </div>
 <div class="section" id="lsa">
 <h2>LSA</h2>
 <p>O LSA é nada mais que usar o <a class="reference external" href="../svd-vs-pca">SVD</a> mas em vez de diminuir as dimensões vamos manter o tamanho da matriz:</p>
-<pre class="code python"><a name="rest_code_876b4bd017194777a169c42e5e82d9a1-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
-<a name="rest_code_876b4bd017194777a169c42e5e82d9a1-2"></a><span class="p">(</span><span class="mi">61</span><span class="p">,</span> <span class="mi">664</span><span class="p">)</span>
-<a name="rest_code_876b4bd017194777a169c42e5e82d9a1-3"></a>
-<a name="rest_code_876b4bd017194777a169c42e5e82d9a1-4"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">lsa</span> <span class="o">=</span> <span class="n">TruncatedSVD</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">61</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<a name="rest_code_876b4bd017194777a169c42e5e82d9a1-5"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">lsa</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<a name="rest_code_876b4bd017194777a169c42e5e82d9a1-6"></a><span class="n">TruncatedSVD</span><span class="p">(</span><span class="n">algorithm</span><span class="o">=</span><span class="s1">'randomized'</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">61</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-<a name="rest_code_876b4bd017194777a169c42e5e82d9a1-7"></a>   <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+<a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-2"></a><span class="p">(</span><span class="mi">61</span><span class="p">,</span> <span class="mi">664</span><span class="p">)</span>
+<a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-3"></a>
+<a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-4"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">lsa</span> <span class="o">=</span> <span class="n">TruncatedSVD</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">61</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-5"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">lsa</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-6"></a><span class="n">TruncatedSVD</span><span class="p">(</span><span class="n">algorithm</span><span class="o">=</span><span class="s1">'randomized'</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">61</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+<a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-7"></a>   <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 </pre>
 <p>O real poder do LSA vem desse tratamento dado à matriz formada a partir do TF-IDF, o código abaixo indica as palavras mais relevantes para cada parágrafo:</p>
-<pre class="code python"><a name="rest_code_3ade7e76b9694bfda95e3a1db2b8c6f7-1"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lsa</span><span class="o">.</span><span class="n">components_</span><span class="p">):</span>
-<a name="rest_code_3ade7e76b9694bfda95e3a1db2b8c6f7-2"></a>    <span class="n">terms_in_comp</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ft_name</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
-<a name="rest_code_3ade7e76b9694bfda95e3a1db2b8c6f7-3"></a>    <span class="n">sorted_terms</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">terms_in_comp</span><span class="p">,</span>
-<a name="rest_code_3ade7e76b9694bfda95e3a1db2b8c6f7-4"></a>                          <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
-<a name="rest_code_3ade7e76b9694bfda95e3a1db2b8c6f7-5"></a>
-<a name="rest_code_3ade7e76b9694bfda95e3a1db2b8c6f7-6"></a>    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">"paragrafo: {i}"</span><span class="p">)</span>
-<a name="rest_code_3ade7e76b9694bfda95e3a1db2b8c6f7-7"></a>    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sorted_terms</span><span class="p">:</span>
-<a name="rest_code_3ade7e76b9694bfda95e3a1db2b8c6f7-8"></a>        <span class="k">print</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<a name="rest_code_3ade7e76b9694bfda95e3a1db2b8c6f7-9"></a>    <span class="k">print</span><span class="p">(</span><span class="s2">"-"</span><span class="o">*</span><span class="mi">20</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_cf73a290231c404e81b2744e9deead7d-1"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lsa</span><span class="o">.</span><span class="n">components_</span><span class="p">):</span>
+<a name="rest_code_cf73a290231c404e81b2744e9deead7d-2"></a>    <span class="n">terms_in_comp</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ft_name</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+<a name="rest_code_cf73a290231c404e81b2744e9deead7d-3"></a>    <span class="n">sorted_terms</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">terms_in_comp</span><span class="p">,</span>
+<a name="rest_code_cf73a290231c404e81b2744e9deead7d-4"></a>                          <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
+<a name="rest_code_cf73a290231c404e81b2744e9deead7d-5"></a>
+<a name="rest_code_cf73a290231c404e81b2744e9deead7d-6"></a>    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">"paragrafo: {i}"</span><span class="p">)</span>
+<a name="rest_code_cf73a290231c404e81b2744e9deead7d-7"></a>    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sorted_terms</span><span class="p">:</span>
+<a name="rest_code_cf73a290231c404e81b2744e9deead7d-8"></a>        <span class="k">print</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<a name="rest_code_cf73a290231c404e81b2744e9deead7d-9"></a>    <span class="k">print</span><span class="p">(</span><span class="s2">"-"</span><span class="o">*</span><span class="mi">20</span><span class="p">)</span>
 </pre>
 <p>Pegando apenas o parágrafo 0, o resultado que temos é:</p>
 <table class="docutils field-list" frame="void" rules="none">

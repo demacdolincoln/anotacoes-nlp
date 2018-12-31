@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html prefix="" lang="pt_br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Seq2Seq - Introdução | Anotações sobre NLP</title>
+<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/dark.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/theme.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono" rel="stylesheet">
+<link href="../../assets/css/ipython.min.css" rel="stylesheet" type="text/css">
+<link href="../../assets/css/nikola_ipython.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#5670d4">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/seq2seq-introducao/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><script src="https://cdn.jsdelivr.net/npm/vega@4.4.0"></script><script src="https://cdn.jsdelivr.net/npm/vega-lite@2.6.0"></script><script src="https://cdn.jsdelivr.net/npm/vega-embed@3.24.2"></script><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/languages/python.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/languages/julia.min.js"></script><script>hljs.initHighlightingOnLoad();</script><script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script><meta name="author" content="Lincoln de Macêdo">
+<link rel="prev" href="../classificacao-1/" title="Classificação 1" type="text/html">
+<link rel="next" href="../seq2seq-implementacao/" title="Seq2Seq - Implementação" type="text/html">
+<meta property="og:site_name" content="Anotações sobre NLP">
+<meta property="og:title" content="Seq2Seq - Introdução">
+<meta property="og:url" content="http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/seq2seq-introducao/">
+<meta property="og:description" content='Tenho certeza que todos ao menos uma vez se perguntaram, pelo menos nas primeiras vezes que usaram o google translate, "como é que isso funciona? é magica?", até mesmo pelo que escrevi aqui até agora,'>
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2018-12-24T02:13:03-03:00">
+<meta property="article:tag" content="modelagem">
+</head>
+<body class="hack dark">
+
+<a href="#content" class="sr-only sr-only-focusable">Pular para o conteúdo principal</a>
+    <div id="container">
+         
+    <header id="header"><h1 id="brand"><a href="http://demacdolincoln.github.io/anotacoes-nlp/posts/" title="Anotações sobre NLP" rel="home">
+
+        <span id="blog-title">Anotações sobre NLP</span>
+    </a></h1>
+
+        
+
+        
+    <nav id="menu"><ul>
+<li><a href="../../archive.html">Arquivo</a></li>
+                <li><a href="../../categories/">Etiqueta</a></li>
+                <li><a href="../../rss.xml">Feed RSS</a></li>
+
+    
+
+    
+    
+    </ul></nav></header><main id="content"><article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Seq2Seq - Introdução</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Lincoln de Macêdo
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2018-12-24T02:13:03-03:00" itemprop="datePublished" title="2018-12-24 02:13">2018-12-24 02:13</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/seq2seq-introducao.html">Comments</a>
+
+
+            
+        </p>
+<p class="sourceline"><a href="index.rst" class="sourcelink">Código</a></p>
+
+        </div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
+<p>Tenho certeza que todos ao menos uma vez se perguntaram, pelo menos nas primeiras vezes que usaram o google translate, "como é que isso funciona? é magica?", até mesmo pelo que escrevi aqui até agora, todos os conteúdos estão bastante distantes de algo que trate tão intensamente com linguagem do que o desta anotação. O seq2seq nos permite criar redes que aprendam a sequência em que as palavras estão dispostas num texto de modo que fique fácil gerar textos, por hora, para simplificar esse assunto bastante extendo, traterei aqui apenas de explicar cada passo praticamente sem o código e na próxima anotação terá uma implementação completa.</p>
+<div class="section" id="encoder-decoder">
+<h2>encoder - decoder</h2>
+<p>O grande "truque" está no mecanismo de codificação-decodificação, na prática são 2 redes neurais recorrentes bem simples que compartilham uma mesma camada oculta e não tem camada de ativação, só uma célula <cite>GRU ou LSTM &lt;link://filename/posts/gru-e-lstm.rst&gt;_</cite> que realiza o processamento.</p>
+<p>A informação que dá sentido à ambas as redes é a camada oculta, é sobre ela que incide o treinamento, portanto essa é a camada responsável por fazer a relação entre as saídas de cada rede neural.</p>
+<p>Mas por não haver uma classificação, precisaremos de mais uma rede neural (3 até agora) que será como a rede de decodificação mas com funções de ativação para que sobre ela seja realizado o treinamento da camada oculta.</p>
+<p>Então o que temos até o momento é:</p>
+<ul>
+<li>
+<p class="first">encoder:</p>
+<blockquote>
+<ul class="simple">
+<li>hidden layer</li>
+<li>gru</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p class="first">decoder:</p>
+<blockquote>
+<ul class="simple">
+<li>hidden layer</li>
+<li>gru</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p class="first">att decoder:</p>
+<blockquote>
+<ul class="simple">
+<li>hidden layer</li>
+<li>gru</li>
+<li>função linear</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="treinamento">
+<h2>Treinamento</h2>
+<p>Como já disse que tudo está em torno da camada oculta compartilhada, é criando este array que se inicia o treinamento, que incide mais sobre a camada de decodificação que sobre a de encodificação, é feito desse modo pela camada de decodificação ser a usada para calcular a perda já que é ela que nos fornecerá a saída final do algoritmo.</p>
+<p>Procedimento:</p>
+<ul class="simple">
+<li>hidden layer</li>
+<li>encoder_output, hidden_layer = encoder(input, hidden_layer)</li>
+<li>decoder_output, hidden_layer = decoder(encoder_output, hidden_layer)</li>
+<li>loss(decoder_output, target)</li>
+<li>backward</li>
+<li>step</li>
+</ul>
+<p>Na próxima anotação sobre o seq2seq, diante do código, tudo ficará mais claro.</p>
+<p>Resolvi não colocar imagens ilustrativas aqui pois no 1º link das leituras recomendadas há um monte de animações explicando bem detalhadamente todo o processo, das 2 leituras recomendadas, essa é a que mais recomendo.</p>
+<p>---</p>
+</div>
+<div class="section" id="leituras-recomendadas">
+<h2>leituras recomendadas</h2>
+<ul class="simple">
+<li><a class="reference external" href="http://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/">http://jalammar.github.io/visualizing-neural-machine-translation-mechanics-of-seq2seq-models-with-attention/</a></li>
+<li><a class="reference external" href="https://google.github.io/seq2seq/">https://google.github.io/seq2seq/</a></li>
+</ul>
+</div>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/modelagem/" rel="tag">modelagem</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../classificacao-1/" rel="prev" title="Classificação 1">Post anterior</a>
+            </li>
+            <li class="next">
+                <a href="../seq2seq-implementacao/" rel="next" title="Seq2Seq - Implementação">Próximo post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comentários</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="demacdolincoln",
+            disqus_url="http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/seq2seq-introducao/",
+        disqus_title="Seq2Seq - Introdu\u00e7\u00e3o",
+        disqus_identifier="cache/posts/seq2seq-introducao.html",
+        disqus_config = function () {
+            this.language = "pt_br";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="demacdolincoln";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script></main><footer id="footer"><p>Contents © 2018         <a href="mailto:demacdolincoln@gmail.com">Lincoln de Macêdo</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+            
+        </footer>
+</div>
+    
+    
+
+    
+    
+    
+</body>
+</html>

@@ -93,14 +93,14 @@ tutor">
 <img alt="/images/svd_pca_2_64reduction.png" src="../../images/svd_pca_2_64reduction.png"><p>A imagem acima mostra que deve ter coincidido a forma como o SVD reduziu as dimensões e a rotação feita pelo PCA, só lembrando o que está de forma muito explícita no link para o Quora: o PCA usa o SVD para criar um ranking, afinal PCA significa "análise do componente principal" e o SVD fornece um dos passos para chegar ao componente pricipal.</p>
 <p>Mas o KMeans realiza um aprendizado não supervisionado, e ainda especialmente neste caso onde a redução de 64 dimensões para 2 com certeza não deu margem para que os dados fossem linearmente separáveis, resolvi usar o SVM para desenhar o espaço para cada classe.</p>
 <img alt="/images/svd_pca_3_svm.png" src="../../images/svd_pca_3_svm.png"><p>Algo que se deve ressaltar no gráfico acima é que os pontos semi-transparentes que adicionei ao gráfico são os que os classificadores treinados erraram, sobre isso repare no resultado abaixo:</p>
-<pre class="code text"><a name="rest_code_270708180b8c45f0ba188eb153206152-1"></a>erros SVD: 704 de 1797
-<a name="rest_code_270708180b8c45f0ba188eb153206152-2"></a>erros PCA: 704 de 1797
-<a name="rest_code_270708180b8c45f0ba188eb153206152-3"></a>erros normal: 0 de 1797
-<a name="rest_code_270708180b8c45f0ba188eb153206152-4"></a>-----------------------
-<a name="rest_code_270708180b8c45f0ba188eb153206152-5"></a>percentuais de acertos:
-<a name="rest_code_270708180b8c45f0ba188eb153206152-6"></a>&gt; SVD: 60.824%
-<a name="rest_code_270708180b8c45f0ba188eb153206152-7"></a>&gt; pca: 60.824%
-<a name="rest_code_270708180b8c45f0ba188eb153206152-8"></a>&gt; normal: 100.000%
+<pre class="code text"><a name="rest_code_27e20de9dad84d098793720e7653c63b-1"></a>erros SVD: 704 de 1797
+<a name="rest_code_27e20de9dad84d098793720e7653c63b-2"></a>erros PCA: 704 de 1797
+<a name="rest_code_27e20de9dad84d098793720e7653c63b-3"></a>erros normal: 0 de 1797
+<a name="rest_code_27e20de9dad84d098793720e7653c63b-4"></a>-----------------------
+<a name="rest_code_27e20de9dad84d098793720e7653c63b-5"></a>percentuais de acertos:
+<a name="rest_code_27e20de9dad84d098793720e7653c63b-6"></a>&gt; SVD: 60.824%
+<a name="rest_code_27e20de9dad84d098793720e7653c63b-7"></a>&gt; pca: 60.824%
+<a name="rest_code_27e20de9dad84d098793720e7653c63b-8"></a>&gt; normal: 100.000%
 </pre>
 <p>Considerei "normal" como a aplicação do SVM sem reduzir as dimensões. Estes resultados mostram que a sobreposição de dados na redução de dimensões assim como a distorção que ocorre nas transformações feitas com as matrizes, tende a dificultar o trabalho dos algoritmos, mesmo mantendo um certo nível de fidelidade com a distribuição original dos dadosm o melhor é usar essa redução mais para visualizar do que para aplicar métricas ou classificadores, e por isso também que nas notas onde uso distância euclidiana e similaridade de cossenos, ao reduzir as dimensões os resultados parecem errados ainda que nas dimensões originais esteja correto.</p>
 <div class="notebook">

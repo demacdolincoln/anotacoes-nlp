@@ -54,7 +54,7 @@ Traduzindo esse procedimento bem básico em código, teremos:
    pair_ids = np.array(pair_ids)
 
 
-Esse será exatamente o código que teremos no método skip-gram. Mas por enquanto vamos aproveitar os métodos que usam o word2vec já implementados e vamos ver o que podemos extrair deles:
+Esse será exatamente o código que teremos no método skip-gram. Mas por enquanto vamos aproveitar os métodos que usam o word2vec já implementados e vamos ver o que podemos extrair deles.
 
 Gensim
 ------
@@ -72,6 +72,8 @@ No momento de criar o objeto, a única diferença nos parâmetros usados é no `
 A diferença real deles está no input e output pois ambos, cbow e skip-gram, são apenas redes neurais com pouquíssima diferença entre si como será visto posteiormente.
 
 No cbow buscamos predizer a palavra central a partir das palavras de contexto e no skip-gram fazemos o contrário, a partir da palavra central buscamos prever as palavras de contexto.
+
+.. image:: /images/skip-gram_cbow.png
 
 .. code-block:: python
 

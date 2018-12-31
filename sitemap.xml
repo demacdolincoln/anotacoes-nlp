@@ -7,74 +7,114 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/</loc>
-  <lastmod>2018-12-11T05:40:00Z</lastmod>
+  <lastmod>2018-12-31T17:59:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/2018/</loc>
-  <lastmod>2018-12-06T05:01:00Z</lastmod>
+  <lastmod>2018-12-11T06:32:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/archive.html</loc>
-  <lastmod>2018-12-11T05:27:00Z</lastmod>
+  <lastmod>2018-12-25T23:45:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/</loc>
-  <lastmod>2018-12-10T15:21:00Z</lastmod>
+  <lastmod>2018-12-25T16:11:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_classificacao/</loc>
+  <lastmod>2018-12-25T08:22:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_cnn/</loc>
+  <lastmod>2018-12-25T16:11:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_seq2seq/</loc>
+  <lastmod>2018-12-25T08:22:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_utils/</loc>
+  <lastmod>2018-12-25T08:22:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_vetorizacao/</loc>
-  <lastmod>2018-12-10T15:21:00Z</lastmod>
+  <lastmod>2018-12-11T06:32:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/classificacao/</loc>
+  <lastmod>2018-12-25T16:11:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/modelagem/</loc>
+  <lastmod>2018-12-25T08:22:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/utils/</loc>
-  <lastmod>2018-12-06T06:39:00Z</lastmod>
+  <lastmod>2018-12-11T06:32:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/word2vec/</loc>
-  <lastmod>2018-12-06T09:20:00Z</lastmod>
+  <lastmod>2018-12-11T06:32:00Z</lastmod>
  </url>
  <url>
-  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/galleries/</loc>
-  <lastmod>2018-12-11T05:40:00Z</lastmod>
- </url>
- <url>
-  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/galleries/.ipynb_checkpoints/</loc>
-  <lastmod>2018-12-08T02:07:00Z</lastmod>
- </url>
- <url>
-  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/listings/</loc>
-  <lastmod>2018-12-11T05:40:00Z</lastmod>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/index-1.html</loc>
+  <lastmod>2018-12-31T17:59:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/</loc>
-  <lastmod>2018-12-11T05:08:00Z</lastmod>
+  <lastmod>2018-12-25T23:45:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/classificacao-1/</loc>
+  <lastmod>2018-12-25T08:22:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/classificacao-2-cnn/</loc>
+  <lastmod>2018-12-25T08:22:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/distancia-euclidiama-vs-similaridade-de-cossenos/</loc>
-  <lastmod>2018-12-08T01:35:00Z</lastmod>
+  <lastmod>2018-12-11T06:32:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/estatistica-tf-idf-e-lsa/</loc>
-  <lastmod>2018-12-10T05:44:00Z</lastmod>
+  <lastmod>2018-12-11T06:32:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/gru-e-lstm/</loc>
+  <lastmod>2018-12-25T08:22:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/pre-processamento-de-textos/</loc>
-  <lastmod>2018-12-06T06:03:00Z</lastmod>
+  <lastmod>2018-12-11T06:32:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/resumos-0-pagerank/</loc>
+  <lastmod>2018-12-25T23:45:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/seq2seq-implementacao/</loc>
+  <lastmod>2018-12-25T08:22:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/seq2seq-introducao/</loc>
+  <lastmod>2018-12-25T08:22:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/svd-vs-pca/</loc>
-  <lastmod>2018-12-07T04:26:00Z</lastmod>
+  <lastmod>2018-12-11T06:32:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/word2vec-1-introducao/</loc>
-  <lastmod>2018-12-06T09:13:00Z</lastmod>
+  <lastmod>2018-12-11T06:32:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/word2vec-2-cbow/</loc>
-  <lastmod>2018-12-07T03:23:00Z</lastmod>
+  <lastmod>2018-12-11T06:32:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/word2vec-3-skip-gram/</loc>
-  <lastmod>2018-12-07T04:43:00Z</lastmod>
+  <lastmod>2018-12-11T06:32:00Z</lastmod>
  </url>
 </urlset>
