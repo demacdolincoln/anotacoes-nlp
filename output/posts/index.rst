@@ -25,6 +25,7 @@ Pretendo fazer uma longa série de posts sobre NLP, não sou especialista nisso 
 
 * parte 3: modelagem
     * `resumos 0: pagerank <link://filename/posts/resumos-0-pagerank.rst>`_
+    * `seq2seq: introdução <link://filename/posts/seq2seq-introducao.rst>`_
     * `seq2seq: implementação <link://filename/posts/seq2seq-implementacao.rst>`_
 
 * utils

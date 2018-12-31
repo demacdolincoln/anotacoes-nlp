@@ -21,11 +21,12 @@ Pretendo fazer uma longa série de posts sobre NLP, não sou especialista nisso 
 
 * parte 2: classificação
     * `classificação 1: introdução <link://filename/posts/classificacao-1.rst>`_
-    * `classificacao 2: CNN <link://filename/posts/classificacao-2-cnn.rst>`_
+    * *classificacao 2: CNN*
 
 * parte 3: modelagem
     * `resumos 0: pagerank <link://filename/posts/resumos-0-pagerank.rst>`_
-    * `seq2seq: implementação <link://filename/posts/seq2seq-implementacao.rst>`_
+    * `seq2seq: introdução <link://filename/posts/seq2seq-introducao.rst>`_
+    * *seq2seq: implementação*
 
 * utils
     * `Pré-processamento de textos <link://filename/posts/pre-processamento-de-textos.rst>`_. (*muito importante*)
@@ -35,4 +36,10 @@ Pretendo fazer uma longa série de posts sobre NLP, não sou especialista nisso 
 
 Obs1.: O pré-processamento é a etapa inicial de praticamente todos os conteúdos aqui escritos, é realmente muito importante, por isso antes de partir para qualquer outro conteúdo, leia ele primeiro.
 
-Obs2.: O que estiver em itálico é que ainda não escrevi mas devo fazer ao longo dessas semanas. As partes 2 e 3 possivelmente serão sobre classificação de textos e modelagem com cadeias de markov e RNN.
+Obs2.: O que estiver em itálico é que ainda não escrevi mas devo fazer ao longo dessas semanas.
+
+obs3.: Com excessão da parte 1, usarei o cbow, skip-gram e glove já computados, fontes recomendadas:
+
+* http://www.nilc.icmc.usp.br/nilc/index.php/repositorio-de-word-embeddings-do-nilc
+* https://github.com/facebookresearch/fastText/blob/master/docs/crawl-vectors.md
+* https://sites.google.com/site/rmyeid/projects/polyglot

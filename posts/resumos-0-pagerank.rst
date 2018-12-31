@@ -90,8 +90,8 @@ Na saída do código acima podemos reparar que a ordem de importância dada a ca
 Logicamente eu poderia ter usado frases em vez de parágrafos para fazer o resumo, talvez até fizesse mais sentido chamar a saída do código de resumo, mas resolvi usar parágrafos inteiros por considerar que a idéia fica mais clara assim e ao comparar com o texto original, fica mais visualmente evidente como se deu o trabalho do pagerank, nos próximos posts sobre este tópico serão mostradas redes neurais que fazem um trabalho bem mais coerente, logicamente usarei redes neurais recorrentes e o seq2seq, portanto recomendo que veja as anotações que escrevi sobre esses temas:
 
 `GRU e LSTM <link://filename/posts/gru-e-lstm.rst>`_
-`seq2seq - introdução <link://filename/posts/seq2seq-introducao.rst>`_
+`seq2seq: introdução <link://filename/posts/seq2seq-introducao.rst>`_
 
 ---
 
-[1] link
+_[1] http://www.nilc.icmc.usp.br/nilc/index.php/repositorio-de-word-embeddings-do-nilc
