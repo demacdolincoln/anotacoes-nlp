@@ -12,18 +12,19 @@ obs: Não vou me demorar tratando de questões teóricas sobre as RNN em si, já
 
 Parece meio óbvio dizer mas o que define uma rede neural recorrente é exatamente a recorrência, isto é, informações que são armazenadas e depois reutilizadas, a forma mais simples de implementação consiste em criar uma camada (um array) que armazena os resultados e é utilizado normalmente no processamento dos dados que passam por uma rede neural, só que com 1 caracérística distinta: haver uma condição ou não para atualizar esses dados aprendidos ao longo do treinamento e uma condição que a informação armazenada seja utilizada.
 
-Devido a esse mecanismo ser claramente um gerenciamento de memória e estarmos tratando de redes neurais, não demora muito para começarmos a associar ao modo como nosso cérebro gerencia a memória, desta forma vem ao mundo em 1997 o LSTM (Long Short-Term Memory) [1]_ [2]_, e como o nome bem indica, se trata de gerenciamento de memória de curto e longo prazo, mas como ele faz isso?
+Devido a esse mecanismo ser claramente um gerenciamento de memória e estarmos tratando de redes neurais, não demora muito para começarmos a associar ao modo como nosso cérebro gerencia a memória, desta forma vem ao mundo em 1997 o LSTM (Long Short-Term Memory) [1]_ [2]_, e como o nome bem indica, se trata de gerenciamento de memória de curto e longo prazo, posteriormente, em 2014 nasce o GRU (Gated Recurrent Unit)[3]_, mantendo diversas semelhanças com o LSTM porém com um custo computacional um pouco menor mas que no geral tem um desempenho semelhante ainda que é comum encontrar artigos falando que um ou outro método funcionou bem melhor em algum caso específico. Mas aqui estamos tratando de entender por alto como funciona esse gerenciamento de memória, o que precisamos ter noção é de como eles fazem isso?
 
 Portões
 -------
+
+Portões == funções
 
 .. image:: https://upload.wikimedia.org/wikipedia/commons/3/3b/The_LSTM_cell.png
 
 .. image:: https://upload.wikimedia.org/wikipedia/commons/3/37/Gated_Recurrent_Unit%2C_base_type.svg
 
 
-
-Traduzindo as funções expostas na imagem acima disponível na wikipedia representando uma célula de memória LTSM:
+Explicando as imagens acima: a primeira mostra como funciona o LSTM e a segunda mostra como funciona o GRU, ainda que os diagramas sejam diferentes, vemos que as funções usadas, os "portões" são os mesmos embora aplicados de diferentes formas, como são as funções que importam para entender aidéia geral, vou direto à explicação sobre as funções.
 
 .. math::
 
@@ -45,8 +46,11 @@ Todo o mecanismo de preservação e esquecimento desses métodos se baseia nesse
 artigos e links recomendados
 ----------------------------
 
-.. [1] `Learning to Forget: Continual Prediction with LSTM ( Felix A. Gers , Jürgen Schmidhuber , Fred Cummins ) <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.55.5709>`
+Uma das melhores explicações que já encontrei sobre LSTM e GRU: `Illustrated Guide to LSTM’s and GRU’s: A step by step explanation <https://towardsdatascience.com/illustrated-guide-to-lstms-and-gru-s-a-step-by-step-explanation-44e9eb85bf21>`_
 
-.. [2] `Long short-term memory (Sepp Hochreiter; Jürgen Schmidhuber) <https://www.researchgate.net/profile/Sepp_Hochreiter/publication/13853244_Long_Short-term_Memory/links/5700e75608aea6b7746a0624/Long-Short-term-Memory.pdf?origin=publication_detail>`
 
-.. [3] `Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation ( Cho, Kyunghyun; van Merrienboer, Bart; Gulcehre, Caglar; Bahdanau, Dzmitry; Bougares, Fethi; Schwenk, Holger; Bengio, Yoshua) <https://arxiv.org/pdf/1406.1078v3.pdf>`
+.. [1] `Learning to Forget: Continual Prediction with LSTM ( Felix A. Gers , Jürgen Schmidhuber , Fred Cummins ) <http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.55.5709>`_
+
+.. [2] `Long short-term memory (Sepp Hochreiter; Jürgen Schmidhuber) <https://www.researchgate.net/profile/Sepp_Hochreiter/publication/13853244_Long_Short-term_Memory/links/5700e75608aea6b7746a0624/Long-Short-term-Memory.pdf?origin=publication_detail>`_
+
+.. [3] `Learning Phrase Representations using RNN Encoder–Decoder for Statistical Machine Translation ( Cho, Kyunghyun; van Merrienboer, Bart; Gulcehre, Caglar; Bahdanau, Dzmitry; Bougares, Fethi; Schwenk, Holger; Bengio, Yoshua) <https://arxiv.org/pdf/1406.1078v3.pdf>`_
