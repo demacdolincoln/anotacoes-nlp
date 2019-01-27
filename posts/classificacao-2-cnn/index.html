@@ -23,10 +23,13 @@
 <meta property="og:site_name" content="Anotações sobre NLP">
 <meta property="og:title" content="Classificação 2: CNN">
 <meta property="og:url" content="http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/classificacao-2-cnn/">
-<meta property="og:description" content="Como falado anteriormente &lt;link://filename/posts/classificacao-1.rst&gt;_, classificar um texto é algo que vai além do vocabulário ainda que a gente utilize o word2vec ou o glove, e como a ordem das pala">
+<meta property="og:description" content="Nota
+os códigos estão aqui: https://github.com/demacdolincoln/test-sentiment_analysis
+
+Como falado anteriormente &lt;link://filename/posts/classificacao-1.rst&gt;_, classificar um texto é algo que vai além ">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2018-12-25T05:17:55-03:00">
-<meta property="article:tag" content="classificação">
+<meta property="article:tag" content="cnn">
 </head>
 <body class="hack dark">
 
@@ -74,8 +77,12 @@
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
     <div>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">os códigos estão aqui: <a class="reference external" href="https://github.com/demacdolincoln/test-sentiment_analysis">https://github.com/demacdolincoln/test-sentiment_analysis</a></p>
+</div>
 <p>Como falado <cite>anteriormente &lt;link://filename/posts/classificacao-1.rst&gt;_</cite>, classificar um texto é algo que vai além do vocabulário ainda que a gente utilize o word2vec ou o glove, e como a ordem das palavras importa muito, vamos dar aqui o 1º passo neste sentido, vamos ver como funciona uma rede neural convolucional (CNN) aplicada à classificação de textos.</p>
-<p>Habitualmente elas são usadas essencialmente em processamento de imagens, a idéia é bastante simples: ter uma matriz maior e calcular uma matriz menor equivalente, neste processo há perda de dados e portanto é irreversível, porém tem se demonstrado muito útil em muitos casos.</p>
+<p>Habitualmente elas são usadas essencialmente em processamento de imagens, no caso o que teremos é uma linha representando cada palavra e as colunas representando um ponto no hiperplano de acordo com a veotrização treinada. A idéia por trás da convolução aqui aplicada é bastante simples: ter uma matriz maior e calcular uma matriz menor equivalente, neste processo há perda de dados e portanto é irreversível, porém tem se demonstrado muito útil em muitos casos.</p>
 <div class="section" id="implementacao">
 <h2>Implementação:</h2>
 <p>O primeiro passo é transformar um texto numa matriz, para isso vamos recordar o que temos:</p>
@@ -84,7 +91,151 @@
 <li>skip-gram, cbow, glove, etc. ~&gt; representação cartesiana de palavras segundo o sentido compreendido pelo seu uso</li>
 </ul>
 <p>Diante disso se torna meio lógico fazer uma matriz no formato <cite>words x embedding dims</cite>.</p>
-<p>Um dos problemas dessa abordagem é que frases tem tamanhos variáveis enquanto a matriz de entrada na camada convolucional da CNN precisa ter tamanho fixo, então temos de lidar sempre com o pior caso, frases grandes, e preencher o espaço restante das frases menores com zeros, isso acaba nos obrigando ter um custo computacional extra já que teremos muitos espaços em branco só para que sempre tenhamos matrizes do mesmo tamanho.</p>
+<p>Um dos problemas dessa abordagem é que frases tem tamanhos variáveis enquanto a matriz de entrada na camada convolucional da CNN precisa ter tamanho fixo, então temos de lidar sempre com o pior caso, frases grandes, e preencher o espaço restante das frases menores com zeros, isso acaba nos obrigando a ter um custo computacional extra já que teremos muitos espaços em branco só para que sempre tenhamos matrizes do mesmo tamanho.</p>
+<p>Antes de continuar preciso fazer algumas observações:</p>
+<ol class="arabic simple">
+<li>Não encontrei um dataset em PTBR bom o suficiente, portanto, contrariando minha proposta inicial, o ciclo de anotações sobre classificação usará um dataset em inglês.</li>
+<li>Tentei baixar um word embedding já treinado com o vocabulário da língua inglesa, mas ele tinha mais de 6Gb, como esse fato ia complicar algumas coisas a nível operacional, diminuindo minha proposta de fazer as anotações da forma mais simples possível, preferi usar o Gensim para calcular o skip-gram estrito ao dataset.</li>
+</ol>
+</div>
+<div class="section" id="primeiros-passos">
+<h2>Primeiros passos:</h2>
+<ul class="simple">
+<li>Baixar o dataset: link</li>
+<li>E o de sempre conforme mostrado em <a class="reference external" href="filename://posts/word2vec-1-introducao.rst">Word2vec 1: introdução</a>
+</li>
+</ul>
+<p>Sobre o tamanho das dimensões no word2vec: como neste caso precisamos de uma matriz quadrada, precisamos que a quantidade de dimensões seja a mesma do maior texto depois do processo de limpeza.</p>
+<p>Após isso ser feito podemos montar as matrizes:</p>
+<pre class="code python"><a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-1"></a><span class="k">def</span> <span class="nf">make_matrix</span><span class="p">(</span><span class="n">phrase</span><span class="p">,</span> <span class="n">model_vec</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">stop_words</span><span class="p">):</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-2"></a>    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">phrase</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-3"></a>        <span class="n">phrase</span> <span class="o">=</span> <span class="n">gensim</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">simple_preprocess</span><span class="p">(</span><span class="n">phrase</span><span class="p">)</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-4"></a>        <span class="n">phrase</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">phrase</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">]</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-5"></a>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-6"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-7"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phrase</span><span class="p">):</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-8"></a>        <span class="k">if</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">model_vec</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">vocab</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-9"></a>            <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">model_vec</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-10"></a>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-11"></a>    <span class="k">return</span> <span class="n">out</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-12"></a>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-13"></a><span class="k">class</span> <span class="nc">Data</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-14"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">stop_words</span><span class="p">):</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-16"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-17"></a>            <span class="p">[</span><span class="n">make_matrix</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">stop_words</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-18"></a>        <span class="p">)</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span>  <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">target</span><span class="p">])</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-20"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-21"></a>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-22"></a>    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-23"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-24"></a>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-25"></a>    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-26"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_len</span>
+</pre>
+<p>Para facilitar a divisão do dataset para uma valização cruzada, usei o sklearn bem pontualmente:</p>
+<pre class="code python"><a name="rest_code_8ad115fc588b40eaabb4b44b0888b3bd-1"></a><span class="n">train_data</span><span class="p">,</span> <span class="n">test_data</span><span class="p">,</span> <span class="n">train_target</span><span class="p">,</span> <span class="n">test_target</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">corpus</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+<a name="rest_code_8ad115fc588b40eaabb4b44b0888b3bd-2"></a>
+<a name="rest_code_8ad115fc588b40eaabb4b44b0888b3bd-3"></a><span class="n">data_train</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">train_target</span><span class="p">,</span> <span class="n">skip_gram</span><span class="p">,</span> <span class="n">max_sentence</span><span class="p">,</span> <span class="n">stopw</span><span class="p">)</span>
+<a name="rest_code_8ad115fc588b40eaabb4b44b0888b3bd-4"></a><span class="n">data_test</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">test_target</span><span class="p">,</span> <span class="n">skip_gram</span><span class="p">,</span> <span class="n">max_sentence</span><span class="p">,</span> <span class="n">stopw</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="modelo-de-rede-neural">
+<h2>Modelo de rede neural:</h2>
+<p>A rede neural será uma rede convolucional bem padrão:</p>
+<pre class="code python"><a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-1"></a><span class="k">class</span> <span class="nc">CNN_2D</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lin_in</span><span class="p">,</span> <span class="n">lin_out</span><span class="p">):</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-3"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">CNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-4"></a>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">conv0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-6"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-7"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-8"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-9"></a>        <span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-10"></a>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-12"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-13"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-14"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-15"></a>        <span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-16"></a>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">lin_in</span><span class="p">,</span> <span class="n">lin_out</span><span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-18"></a>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-19"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-20"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv0</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-21"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-22"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-23"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-24"></a>        <span class="k">return</span> <span class="n">x</span>
+</pre>
+<p>Para entender melhor como a convolução funciona neste contexto, recomendo os vídeos:
+* video1
+* video2</p>
+<p>Uma vantagem da convolução 2d (com uma matriz e não com um array) é uma maior propagação de informação sobre áreas tomadas pelos zeros, se formos imaginar o processo num array logo percebemos um espaço muito limitado de propagação das informações finais apenas. Para expor melhor as diferenças óbvias em se trabalhar com 1 e com 2 dimensões, também repeti o experimento com uma rede convolucional 1d, ela apresenta pouquíssimas diferenças: menores dimensões no skip-gram (apenas 10), 3 camadas lineares na rede neural, maior quantidade de épocas no treinamento. Em todos os casos resolvi usar uma função sigmoide na saída, isso para ter uma estimativa de "certeza" quanto às escolhas da rede neural após o treinamento, mas deixarei essa análise comparativa para o último post desse ciclo.</p>
+<pre class="code python"><a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-1"></a><span class="k">class</span> <span class="nc">CNN_1D</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lin_in</span><span class="p">,</span> <span class="n">lin_out</span><span class="p">):</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-3"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">CNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-4"></a>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-6"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-7"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-8"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-9"></a>        <span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-10"></a>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-12"></a>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">lin_in</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">lin_in</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lin_in</span><span class="o">*</span><span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">lin_in</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lin_in</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="n">lin_out</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-16"></a>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-17"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-18"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-19"></a>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-20"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-21"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-22"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-23"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-24"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linear2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-25"></a>        <span class="k">return</span> <span class="n">x</span>
+</pre>
+<p>Como acho a idéia aqui não ficou tão clara, antes de continuar, vou apenas ressaltar dimensões de entrada para cada rede neural:</p>
+<ul>
+<li>
+<p class="first">Conv2d:</p>
+<blockquote>
+<ul class="simple">
+<li>altura: tamanho máximo de palavras</li>
+<li>largura: tamanho máximo de palavras</li>
+<li>word embedding dims: tamanho máximo de palavras</li>
+<li>a matriz será: palavras x word embedding</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p class="first">Conv1d:</p>
+<blockquote>
+<ul class="simple">
+<li>tamanho: tamanho máximo de palavras * word embedding dims</li>
+<li>word embedding dims: qualquer tamanho que queira, no caso eu escolhi 10</li>
+<li>o array será: dimensões de cada palavra lida na ordem colocada uma após a outra num array</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="treinamento">
+<h2>Treinamento:</h2>
+<p>Como pretendo fazer um post final de análise dos resultados, usei o ignite para organizar a criação de um csv e salvar a rede neural ao final do treinamento, não entrarei em muitos detalhes mas basta ver o notebook usado que (ao menos espero) fique bem clara a utilidade.</p>
+<p>Em todos os experimentos, para as comparações serem mais justas, usarei essencialmente os mesmos parâmetros:</p>
+<ul class="simple">
+<li>loss function: Cross Entropy</li>
+<li>Optimizer: Adam</li>
+<li>learning rate: 0.001</li>
+</ul>
+<p>Apesar de ser um dataset muito pequeno, com apenas 3000 textos no total e invariavelmente fadado ao overfitting justamente por causa disso, a rede convolucional 2d funcionou muito melhor que a 1d como os gráficos abaixo claramente demonstram:</p>
+<img alt="/images/classification_conv.png" src="../../images/classification_conv.png"><p><strong>resultado final:</strong></p>
+<p>Na próxima anotação será a vez de tratar de redes recorrentes, serão no total 3 redes neurais (1 na próxima anotação e 2 na seguinte), inicialmente lidando apenas com a recorrência comparando o desempenho do GRU e LSTM e posteriormente combinado a recorrência com a convolução, mas para adiantar as coisas recomendo começar a ler a respeito do <a class="reference external" href="filename://posts/gru-e-lstm.rst">LSTM e GRU</a>.</p>
 <p>---</p>
 </div>
 <div class="section" id="leituras-recomendadas">
@@ -94,7 +245,7 @@
 </div>
     </div>
     <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
-<li><a class="tag p-category" href="../../categories/classificacao/" rel="tag">classificação</a></li>
+<li><a class="tag p-category" href="../../categories/cnn/" rel="tag">cnn</a></li>
         </ul>
 <ul class="pager hidden-print">
 <li class="previous">
@@ -125,7 +276,7 @@
     <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
-        </section></article><script>var disqus_shortname="demacdolincoln";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script></main><footer id="footer"><p>Contents © 2018         <a href="mailto:demacdolincoln@gmail.com">Lincoln de Macêdo</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+        </section></article><script>var disqus_shortname="demacdolincoln";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script></main><footer id="footer"><p>Contents © 2019         <a href="mailto:demacdolincoln@gmail.com">Lincoln de Macêdo</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
             
         </footer>
 </div>

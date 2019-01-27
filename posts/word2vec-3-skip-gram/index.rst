@@ -189,8 +189,4 @@ Só lembrando que segui o mesmo padrão de cores:
     Termos que ambas as métricas concordam
 
 
-.. raw:: html
-
-    <div class="notebook">
-        <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/word2vec-3-skipgram.ipynb">code</a>
-    </div>
+.. note:: notebook usado: `link para o nbviewer <http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/word2vec-3-skipgram.ipynb>`_

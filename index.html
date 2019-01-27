@@ -19,7 +19,7 @@
 <link rel="next" href="index-1.html" type="text/html">
 <!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><script src="https://cdn.jsdelivr.net/npm/vega@4.4.0"></script><script src="https://cdn.jsdelivr.net/npm/vega-lite@2.6.0"></script><script src="https://cdn.jsdelivr.net/npm/vega-embed@3.24.2"></script><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/languages/python.min.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/languages/julia.min.js"></script><script>hljs.initHighlightingOnLoad();</script><script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
-</script><link rel="prefetch" href="posts/resumos-0-pagerank/" type="text/html">
+</script><link rel="prefetch" href="posts/classificacao-4-rnn-parte-2-%2B-convolucao/" type="text/html">
 </head>
 <body class="hack dark">
 
@@ -44,7 +44,244 @@
     
     
     </ul></nav></header><main id="content"><div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/resumos-0-pagerank/" class="u-url">Resumos 0: PageRank</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/classificacao-4-rnn-parte-2-%2B-convolucao/" class="u-url">Classificação 4: RNN parte 2 (+ convolução)</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Lincoln de Macêdo
+            </span></p>
+            <p class="dateline">
+            <a href="posts/classificacao-4-rnn-parte-2-%2B-convolucao/" rel="bookmark">
+            <time class="published dt-published" datetime="2019-01-26T23:48:33-03:00" itemprop="datePublished" title="2019-01-26 23:48">2019-01-26 23:48</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="posts/classificacao-4-rnn-parte-2-%2B-convolucao/#disqus_thread" data-disqus-identifier="cache/posts/classificacao-4-rnn-parte-2-+-convolucao.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <div>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">os códigos estão aqui: <a class="reference external" href="https://github.com/demacdolincoln/test-sentiment_analysis">https://github.com/demacdolincoln/test-sentiment_analysis</a></p>
+</div>
+<p>Admito que eu já disse tudo o que precisava dizer nos posts anteriores, para os testes dessa última etapa, usei 2 redes neurais com apenas 1 diferença entre elas, uma usa convolução 1d e outra 2d, e por não ter muito o que falar no momento vamos direto ao que interessa.</p>
+<div class="section" id="procedimentos">
+<h2>Procedimentos</h2>
+<ol class="arabic">
+<li>
+<p class="first">init_hidden</p>
+</li>
+<li>
+<p class="first">recurrence (lstm)</p>
+</li>
+<li>
+<p class="first">convolução</p>
+<blockquote>
+<ol class="lowerroman simple">
+<li>convolução (nn.Conv)</li>
+<li>ReLu</li>
+<li>MaxPool</li>
+<li>BatchNorm</li>
+</ol>
+</blockquote>
+</li>
+<li>
+<p class="first">funções lineares (3 no total)</p>
+</li>
+</ol>
+</div>
+<div class="section" id="resultados">
+<h2>Resultados:</h2>
+<img alt="/images/classification_conv_rnn.png" src="images/classification_conv_rnn.png"><p>É interessante notar que mesmo não alcançando um bom resultado, o aprendizado com a convolução 1d indica um aprendizado mais "real" dentre todos até agora, talvez se seguisse o aprendizado por mais 50 ou até mesmo 100 épocas, a acurácia talvez se equiparasse à convolução 2d.</p>
+<p>Sobre a convolução 2d fica bem claro que mesmo mesmo alcançando basicamente o mesmo resultado que sem convolução, a distância entre a linha que representa os percentuais de acertos para os dados de treinamento em relação aos de teste é o maior dentre os 4 testes com redes convolucionais, isso indica um ajuste mais rápido ao treinamento ainda que para os testes tenha chegado no mesmo limite que na rnn sem convolução.</p>
+<p>Resumindo os parágrafos anteriores, a convolução 1d + rnn leva a um aprendizado mais lento, o que não é ruim, aprender muito rápido nesse contexto significa não explorar adequadamente o espaço de busca a ser percorrido pela otimização (gosto de definir algoritmos de otimização como uma busca heurística num hiperplano altamente irregular na maioria dos casos), aprender devagar tem seu lado bom mas pela ausência de garantias que chegará em aproximadamente 75% de acerto nos dados de teste, só posso concluir que tende ao underfitting, especialmente por nenhum experimento que fiz, mesmo com taxa de aprendizado mais alta conseguiu chegar a tal resultado, porém só posso ter certeza treinando por mais épocas. Por outro lado a convolução 2d + rnn tendeu ao overfitting, isso fica bem claro pela distância crescente entre a acurácia para dados de testes e treinamento. Resumindo o resumo: neste caso não necessariamente adicionar etapas como a convolução foi um bom negócio.</p>
+<p>---</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top"><tr class="field">
+<th class="field-name">post scriptum:</th>
+<td class="field-body">Pensei em fazer um post final com um resumo geral, mas agora considero isso desnecessário, no repositório ainda bagunçado com os códigos desse experimento há um notebook chamado <em>"relatorio.ipynb"</em> onde estão os gráficos e uma tabela que indica coisas como quantidade de épocas taxas de aprendizado usadas.</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/classificacao-3-rnn-parte-1/" class="u-url">Classificação 3: RNN parte 1</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Lincoln de Macêdo
+            </span></p>
+            <p class="dateline">
+            <a href="posts/classificacao-3-rnn-parte-1/" rel="bookmark">
+            <time class="published dt-published" datetime="2019-01-20T18:08:26-03:00" itemprop="datePublished" title="2019-01-20 18:08">2019-01-20 18:08</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="posts/classificacao-3-rnn-parte-1/#disqus_thread" data-disqus-identifier="cache/posts/classificacao-3-rnn-parte-1.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="e-content entry-content">
+    <div>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">os códigos estão aqui: <a class="reference external" href="https://github.com/demacdolincoln/test-sentiment_analysis">https://github.com/demacdolincoln/test-sentiment_analysis</a></p>
+</div>
+<p>Nste primeiro experimento com redes neurais recorrentes, vamos apenas analisar o efeito da própria recorrência com o LSTM e GRU. Preliminarmente é preciso compreender alguns aspectos:</p>
+<ol class="arabic simple">
+<li>O que faremos com o skip-gram treinado pelo Gensim?</li>
+<li>Em quê o LSTM ou o GRU poderão influenciar?</li>
+<li>Se a entrada tem tamanho variável, como internamente fica a rede neural?</li>
+</ol>
+<p>Antes de chegar a essas explicações, essa é a classe que contém nossa rede neural:</p>
+<table class="codetable"><tr>
+<td class="linenos"><div class="linenodiv"><pre><a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-1"> 1</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-2"> 2</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-3"> 3</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-4"> 4</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-5"> 5</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-6"> 6</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-7"> 7</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-8"> 8</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-9"> 9</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-10">10</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-11">11</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-12">12</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-13">13</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-14">14</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-15">15</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-16">16</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-17">17</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-18">18</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-19">19</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-20">20</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-21">21</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-22">22</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-23">23</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-24">24</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-25">25</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-26">26</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-27">27</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-28">28</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-29">29</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-30">30</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-31">31</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-32">32</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-33">33</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-34">34</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-35">35</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-36">36</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-37">37</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-38">38</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-39">39</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-40">40</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-41">41</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-42">42</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-43">43</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-44">44</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-45">45</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-46">46</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-47">47</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-48">48</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-49">49</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-50">50</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-51">51</a>
+<a href="posts/classificacao-3-rnn-parte-1/#rest_code_edc7571fa314496bb1beb8a61c805a6f-52">52</a></pre></div></td>
+<td class="code"><pre class="code python"><a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-1"></a><span class="k">class</span> <span class="nc">RNN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">,</span> <span class="n">hidden</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-3"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">RNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-4"></a>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span> <span class="o">=</span> <span class="n">n_layers</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="n">m</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-10"></a>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embed</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">({</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-13"></a>            <span class="s2">"weight"</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-14"></a>        <span class="p">})</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-15"></a>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-16"></a>        <span class="k">if</span> <span class="n">mode</span> <span class="ow">is</span> <span class="s2">"gru"</span><span class="p">:</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-17"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">recurrence</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">GRU</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">hidden</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-18"></a>        <span class="k">elif</span> <span class="n">mode</span> <span class="ow">is</span> <span class="s2">"lstm"</span><span class="p">:</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-19"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">recurrence</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">hidden</span><span class="p">,</span> <span class="n">n_layers</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-20"></a>        <span class="k">else</span><span class="p">:</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-21"></a>            <span class="k">raise</span> <span class="s2">"escolha entre gru e lstm apenas"</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-22"></a>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-23"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">m</span><span class="o">*</span><span class="n">hidden</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">hidden</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-24"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">hidden</span><span class="o">*</span><span class="mi">2</span><span class="p">),</span> <span class="n">hidden</span><span class="p">)</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-25"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-26"></a>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-27"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inpt</span><span class="p">):</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-28"></a>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-29"></a>        <span class="n">hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_hidden</span><span class="p">(</span><span class="n">inpt</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-30"></a>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-31"></a>        <span class="n">x</span><span class="p">,</span> <span class="n">hidden</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recurrence</span><span class="p">(</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-32"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">inpt</span><span class="p">),</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-33"></a>            <span class="n">hidden</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-34"></a>        <span class="p">)</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-35"></a>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-36"></a>        <span class="n">space</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">)</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-37"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-38"></a>        <span class="n">space</span><span class="p">[:</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">x</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-39"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">space</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-40"></a>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-41"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-42"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-43"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-44"></a>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-45"></a>        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-46"></a>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-47"></a>    <span class="k">def</span> <span class="nf">_init_hidden</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-48"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">"lstm"</span><span class="p">:</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-49"></a>            <span class="k">return</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">),</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-50"></a>                    <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">))</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-51"></a>        <span class="k">else</span><span class="p">:</span>
+<a name="rest_code_edc7571fa314496bb1beb8a61c805a6f-52"></a>            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_layers</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">)</span>
+</pre></td>
+</tr></table>
+<div class="section" id="o-que-faremos-com-o-skip-gram-treinado-pelo-gensim">
+<h2>1. O que faremos com o skip-gram treinado pelo Gensim?</h2>
+<p>A camada incorporada tem uma dupla função: converter a entrada (array de inteiros e de tamanho variável) em uma matriz de largura fixa, útil à célula que cuidará da recorrência, e aplicar o skip-gram, por isso ela precisa ter as seguintes dimensões [tamanho do vocabulario x dimensões do skip-gram], O que é devolvido por esta camada é uma matriz no formato [quantidade de palavras x dimensões do skip-gram].</p>
+<pre class="code python"><a name="rest_code_74c5992f789a45a59200b572424a91af-1"></a><span class="bp">self</span><span class="o">.</span><span class="n">embed</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<a name="rest_code_74c5992f789a45a59200b572424a91af-2"></a><span class="bp">self</span><span class="o">.</span><span class="n">embed</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">({</span>
+<a name="rest_code_74c5992f789a45a59200b572424a91af-3"></a>    <span class="s2">"weight"</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span>
+<a name="rest_code_74c5992f789a45a59200b572424a91af-4"></a><span class="p">})</span>
+</pre>
+<p>Outro fator importante que precisa ser mencionado é que esta camada também está sujeita ao treinamento da rede neural, ou seja, mantendo desse modo como está, estamos aplicando uma transferência neural, ou seja utilizando uma rede já treinada (no caso skip-gram) e continuando seu treinamento aplicado a uma outra situação, cujo treinamento neste novo contexto tende a ter um ponto de partida com maior precisão, esta é a idéia por trás da escolha de manter o treinamento ativo nesta camada, fazer com que o conteúdo aprendido no treinamento feito pelo Gensim vá se adaptando ao contexto da análise de sentimento segundo o dataset utilizado.</p>
+</div>
+<div class="section" id="em-que-o-lstm-ou-o-gru-poderao-influenciar">
+<h2>2. Em quê o LSTM ou o GRU poderão influenciar?</h2>
+<p>Em sua estrutura, a recorrêncida da RNN se resume a uma camada oculta, uma célula de recorrência que trata do gerenciamento de memória e a entrada, olhando com atenção, a célula fará basicamente é alterar os pesos da entrada de acordo com a camada oculta, que serve como uma memória, indicando o que valorizar ou não na etapa seguinte da execução da rede neural.</p>
+<p>Traduzindo para o contexto da entrada conter a posição de cada palavra num hiperplano de acordo com o valor semântico expresso pelo uso demonstrado no dataset, isso quer dizer que será feito mais um ajuste sobre o skip-gram, na prática esse pós processamento vai indicar a importãncia de cada dimensão para cada palavra, potencializando o viés indicado pelo treinamento do skip-gram.</p>
+<p>No PyTorch temos GRU e GRUCell, e LSTM e LSTMCell, a diferença é que usando simpelsmente GRU ou LSTM estamos inserindo uma pequena rede neural com a célula indicada no nome, podemos variar a quantidade de camadas lineares e definir uma taca pra o dropout, etc, mas se usarmos GRUCell ou LSTMCell teremos apenas a célula, no experimento feito, escolhi a 1ª opção pois não custava nada para mim definir logo o dropout em vez de definir ele em algum outro ponto.</p>
+<p>Como este é um simples teste para ver o impacto da recorrência, resolvi manter apenas uma memória de curto prazo (reicinializando a cada novo uso da rede neural) para mostrar que mesmo com um uso mínimo as diferenças já são notáveis.</p>
+</div>
+<div class="section" id="se-a-entrada-tem-tamanho-variavel-como-internamente-fica-a-rede-neural">
+<h2>3. Se a entrada tem tamanho variável, como internamente fica a rede neural?</h2>
+<p>Em algum momento precisaremos de um tamanho fixo para passar pelas funções lineares, para o experimento atual apenas concatenei a matriz devolvida pelo GRU/LSTM, queria testar nas condições mais adversas, no próximo post aplicarei nesta etapa da execução tanto a convolução 1d quanto a convolução 2d, mas não há como fugir do tamanho fixo em algum momento neste caso, então a regra que usamos no post anterior de considerar o caso com maior quantidade de palavras vale aqui também.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name">
+<col class="field-body">
+<tbody valign="top"><tr class="field">
+<th class="field-name">obs:</th>
+<td class="field-body">um dos problemas do tamanho variável da entrada está no DataLoader do pytorch, ele lança um erro quando definimos um batch_size que nos deixe confortáveis, para trabalhar com dados em lotes ele exige tamanho fixo, de modo que só nos resta ler 1 item do dataset por vez, deixando o processo muito lento já que a cada item lido será aplicada uma etapa do treinamento, vamos ver a evolução mais rápida considerando as épocas mas a quantidade de vezes que os pesos foram atualizados correspondem a $n_epocas * n_items$</td>
+</tr></tbody>
+</table>
+</div>
+<div class="section" id="conclusoes">
+<h2>Conclusões</h2>
+<img alt="/images/classification_gru_ltsm.png" src="images/classification_gru_ltsm.png"><p>É notável e incrível a diferença do uso de redes recorrentes para lidar com linguagem, a grande diferença está no foco da recorrência: enquanto habitualmente ajustamos pesos para classificação, aqui transformamos os valores de entrada e diferentemente da convolução, não espalhamos informações nem produzimos matrizes ou arrays equivalente mas ajustamos a entrada de modo a se adequar melhor ao contexto do treinamenhto, e o melhor de tudo: sabendo lidar com sequências em nível mais abstrato do que apenas arrays e matrizes, o contexto envolta da ordem que as palavras são usadas nas frases tem relevância para a recorrência, e mesmo aplicando tão minimamente e de forma tão pouco eficiente neste exemplo, o resultado já superou largamente o uso de redes convolucionais demonstradas na anotação anterior.</p>
+<p>No próximo post vou misturar as coisas, aplicando a recorreência, depois convlução (1d e 2d), e por último camadas lineares, assim espero concluir os modelos temporariamente e fazer uma análise geral sobre o que os métodos apresentados ao longo dessas anotações sobre classificação influenciam os resultados.</p>
+</div>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/resumos-0-pagerank/" class="u-url">Resumos 0: PageRank</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Lincoln de Macêdo
@@ -152,8 +389,12 @@ Em 1938, Turing se uniu ao GC&amp;CS, o braço de decodificação de mensagens d
 </div>
     </header><div class="e-content entry-content">
     <div>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">os códigos estão aqui: <a class="reference external" href="https://github.com/demacdolincoln/test-sentiment_analysis">https://github.com/demacdolincoln/test-sentiment_analysis</a></p>
+</div>
 <p>Como falado <cite>anteriormente &lt;link://filename/posts/classificacao-1.rst&gt;_</cite>, classificar um texto é algo que vai além do vocabulário ainda que a gente utilize o word2vec ou o glove, e como a ordem das palavras importa muito, vamos dar aqui o 1º passo neste sentido, vamos ver como funciona uma rede neural convolucional (CNN) aplicada à classificação de textos.</p>
-<p>Habitualmente elas são usadas essencialmente em processamento de imagens, a idéia é bastante simples: ter uma matriz maior e calcular uma matriz menor equivalente, neste processo há perda de dados e portanto é irreversível, porém tem se demonstrado muito útil em muitos casos.</p>
+<p>Habitualmente elas são usadas essencialmente em processamento de imagens, no caso o que teremos é uma linha representando cada palavra e as colunas representando um ponto no hiperplano de acordo com a veotrização treinada. A idéia por trás da convolução aqui aplicada é bastante simples: ter uma matriz maior e calcular uma matriz menor equivalente, neste processo há perda de dados e portanto é irreversível, porém tem se demonstrado muito útil em muitos casos.</p>
 <div class="section" id="implementacao">
 <h2>Implementação:</h2>
 <p>O primeiro passo é transformar um texto numa matriz, para isso vamos recordar o que temos:</p>
@@ -162,7 +403,151 @@ Em 1938, Turing se uniu ao GC&amp;CS, o braço de decodificação de mensagens d
 <li>skip-gram, cbow, glove, etc. ~&gt; representação cartesiana de palavras segundo o sentido compreendido pelo seu uso</li>
 </ul>
 <p>Diante disso se torna meio lógico fazer uma matriz no formato <cite>words x embedding dims</cite>.</p>
-<p>Um dos problemas dessa abordagem é que frases tem tamanhos variáveis enquanto a matriz de entrada na camada convolucional da CNN precisa ter tamanho fixo, então temos de lidar sempre com o pior caso, frases grandes, e preencher o espaço restante das frases menores com zeros, isso acaba nos obrigando ter um custo computacional extra já que teremos muitos espaços em branco só para que sempre tenhamos matrizes do mesmo tamanho.</p>
+<p>Um dos problemas dessa abordagem é que frases tem tamanhos variáveis enquanto a matriz de entrada na camada convolucional da CNN precisa ter tamanho fixo, então temos de lidar sempre com o pior caso, frases grandes, e preencher o espaço restante das frases menores com zeros, isso acaba nos obrigando a ter um custo computacional extra já que teremos muitos espaços em branco só para que sempre tenhamos matrizes do mesmo tamanho.</p>
+<p>Antes de continuar preciso fazer algumas observações:</p>
+<ol class="arabic simple">
+<li>Não encontrei um dataset em PTBR bom o suficiente, portanto, contrariando minha proposta inicial, o ciclo de anotações sobre classificação usará um dataset em inglês.</li>
+<li>Tentei baixar um word embedding já treinado com o vocabulário da língua inglesa, mas ele tinha mais de 6Gb, como esse fato ia complicar algumas coisas a nível operacional, diminuindo minha proposta de fazer as anotações da forma mais simples possível, preferi usar o Gensim para calcular o skip-gram estrito ao dataset.</li>
+</ol>
+</div>
+<div class="section" id="primeiros-passos">
+<h2>Primeiros passos:</h2>
+<ul class="simple">
+<li>Baixar o dataset: link</li>
+<li>E o de sempre conforme mostrado em <a class="reference external" href="filename://posts/word2vec-1-introducao.rst">Word2vec 1: introdução</a>
+</li>
+</ul>
+<p>Sobre o tamanho das dimensões no word2vec: como neste caso precisamos de uma matriz quadrada, precisamos que a quantidade de dimensões seja a mesma do maior texto depois do processo de limpeza.</p>
+<p>Após isso ser feito podemos montar as matrizes:</p>
+<pre class="code python"><a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-1"></a><span class="k">def</span> <span class="nf">make_matrix</span><span class="p">(</span><span class="n">phrase</span><span class="p">,</span> <span class="n">model_vec</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">stop_words</span><span class="p">):</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-2"></a>    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">phrase</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-3"></a>        <span class="n">phrase</span> <span class="o">=</span> <span class="n">gensim</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">simple_preprocess</span><span class="p">(</span><span class="n">phrase</span><span class="p">)</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-4"></a>        <span class="n">phrase</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">phrase</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">]</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-5"></a>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-6"></a>    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-7"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phrase</span><span class="p">):</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-8"></a>        <span class="k">if</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">model_vec</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">vocab</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-9"></a>            <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">model_vec</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-10"></a>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-11"></a>    <span class="k">return</span> <span class="n">out</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-12"></a>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-13"></a><span class="k">class</span> <span class="nc">Data</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-14"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">stop_words</span><span class="p">):</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-16"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-17"></a>            <span class="p">[</span><span class="n">make_matrix</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">stop_words</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-18"></a>        <span class="p">)</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-19"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span>  <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">target</span><span class="p">])</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-20"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-21"></a>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-22"></a>    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-23"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-24"></a>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-25"></a>    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a name="rest_code_0aeeabbc377c4dfc8a9082294fed8bdd-26"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_len</span>
+</pre>
+<p>Para facilitar a divisão do dataset para uma valização cruzada, usei o sklearn bem pontualmente:</p>
+<pre class="code python"><a name="rest_code_8ad115fc588b40eaabb4b44b0888b3bd-1"></a><span class="n">train_data</span><span class="p">,</span> <span class="n">test_data</span><span class="p">,</span> <span class="n">train_target</span><span class="p">,</span> <span class="n">test_target</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">corpus</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+<a name="rest_code_8ad115fc588b40eaabb4b44b0888b3bd-2"></a>
+<a name="rest_code_8ad115fc588b40eaabb4b44b0888b3bd-3"></a><span class="n">data_train</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">train_target</span><span class="p">,</span> <span class="n">skip_gram</span><span class="p">,</span> <span class="n">max_sentence</span><span class="p">,</span> <span class="n">stopw</span><span class="p">)</span>
+<a name="rest_code_8ad115fc588b40eaabb4b44b0888b3bd-4"></a><span class="n">data_test</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">test_target</span><span class="p">,</span> <span class="n">skip_gram</span><span class="p">,</span> <span class="n">max_sentence</span><span class="p">,</span> <span class="n">stopw</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="modelo-de-rede-neural">
+<h2>Modelo de rede neural:</h2>
+<p>A rede neural será uma rede convolucional bem padrão:</p>
+<pre class="code python"><a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-1"></a><span class="k">class</span> <span class="nc">CNN_2D</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lin_in</span><span class="p">,</span> <span class="n">lin_out</span><span class="p">):</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-3"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">CNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-4"></a>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">conv0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-6"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-7"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-8"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-9"></a>        <span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-10"></a>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-12"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-13"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-14"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-15"></a>        <span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-16"></a>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">lin_in</span><span class="p">,</span> <span class="n">lin_out</span><span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-18"></a>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-19"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-20"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv0</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-21"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-22"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-23"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<a name="rest_code_a51030f6300d48fabc0d86b37ffc48ba-24"></a>        <span class="k">return</span> <span class="n">x</span>
+</pre>
+<p>Para entender melhor como a convolução funciona neste contexto, recomendo os vídeos:
+* video1
+* video2</p>
+<p>Uma vantagem da convolução 2d (com uma matriz e não com um array) é uma maior propagação de informação sobre áreas tomadas pelos zeros, se formos imaginar o processo num array logo percebemos um espaço muito limitado de propagação das informações finais apenas. Para expor melhor as diferenças óbvias em se trabalhar com 1 e com 2 dimensões, também repeti o experimento com uma rede convolucional 1d, ela apresenta pouquíssimas diferenças: menores dimensões no skip-gram (apenas 10), 3 camadas lineares na rede neural, maior quantidade de épocas no treinamento. Em todos os casos resolvi usar uma função sigmoide na saída, isso para ter uma estimativa de "certeza" quanto às escolhas da rede neural após o treinamento, mas deixarei essa análise comparativa para o último post desse ciclo.</p>
+<pre class="code python"><a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-1"></a><span class="k">class</span> <span class="nc">CNN_1D</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lin_in</span><span class="p">,</span> <span class="n">lin_out</span><span class="p">):</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-3"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">CNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-4"></a>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-6"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-7"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-8"></a>            <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-9"></a>        <span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-10"></a>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-12"></a>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">lin_in</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">lin_in</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lin_in</span><span class="o">*</span><span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">lin_in</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-15"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">lin_in</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="n">lin_out</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-16"></a>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-17"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-18"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-19"></a>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-20"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-21"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-22"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-23"></a>        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-24"></a>        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linear2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<a name="rest_code_e08329b2b91c461e950a0bb63f69eac5-25"></a>        <span class="k">return</span> <span class="n">x</span>
+</pre>
+<p>Como acho a idéia aqui não ficou tão clara, antes de continuar, vou apenas ressaltar dimensões de entrada para cada rede neural:</p>
+<ul>
+<li>
+<p class="first">Conv2d:</p>
+<blockquote>
+<ul class="simple">
+<li>altura: tamanho máximo de palavras</li>
+<li>largura: tamanho máximo de palavras</li>
+<li>word embedding dims: tamanho máximo de palavras</li>
+<li>a matriz será: palavras x word embedding</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p class="first">Conv1d:</p>
+<blockquote>
+<ul class="simple">
+<li>tamanho: tamanho máximo de palavras * word embedding dims</li>
+<li>word embedding dims: qualquer tamanho que queira, no caso eu escolhi 10</li>
+<li>o array será: dimensões de cada palavra lida na ordem colocada uma após a outra num array</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="treinamento">
+<h2>Treinamento:</h2>
+<p>Como pretendo fazer um post final de análise dos resultados, usei o ignite para organizar a criação de um csv e salvar a rede neural ao final do treinamento, não entrarei em muitos detalhes mas basta ver o notebook usado que (ao menos espero) fique bem clara a utilidade.</p>
+<p>Em todos os experimentos, para as comparações serem mais justas, usarei essencialmente os mesmos parâmetros:</p>
+<ul class="simple">
+<li>loss function: Cross Entropy</li>
+<li>Optimizer: Adam</li>
+<li>learning rate: 0.001</li>
+</ul>
+<p>Apesar de ser um dataset muito pequeno, com apenas 3000 textos no total e invariavelmente fadado ao overfitting justamente por causa disso, a rede convolucional 2d funcionou muito melhor que a 1d como os gráficos abaixo claramente demonstram:</p>
+<img alt="/images/classification_conv.png" src="images/classification_conv.png"><p><strong>resultado final:</strong></p>
+<p>Na próxima anotação será a vez de tratar de redes recorrentes, serão no total 3 redes neurais (1 na próxima anotação e 2 na seguinte), inicialmente lidando apenas com a recorrência comparando o desempenho do GRU e LSTM e posteriormente combinado a recorrência com a convolução, mas para adiantar as coisas recomendo começar a ler a respeito do <a class="reference external" href="filename://posts/gru-e-lstm.rst">LSTM e GRU</a>.</p>
 <p>---</p>
 </div>
 <div class="section" id="leituras-recomendadas">
@@ -288,9 +673,8 @@ tanh = \frac{e^x - e^-x}{e^x + e^{-x}}
 <p>Tenho certeza que todos ao menos uma vez se perguntaram, pelo menos nas primeiras vezes que usaram o google translate, "como é que isso funciona? é magica?", até mesmo pelo que escrevi aqui até agora, todos os conteúdos estão bastante distantes de algo que trate tão intensamente com linguagem do que o desta anotação. O seq2seq nos permite criar redes que aprendam a sequência em que as palavras estão dispostas num texto de modo que fique fácil gerar textos, por hora, para simplificar esse assunto bastante extendo, traterei aqui apenas de explicar cada passo praticamente sem o código e na próxima anotação terá uma implementação completa.</p>
 <div class="section" id="encoder-decoder">
 <h2>encoder - decoder</h2>
-<p>O grande "truque" está no mecanismo de codificação-decodificação, na prática são 2 redes neurais recorrentes bem simples que compartilham uma mesma camada oculta e não tem camada de ativação, só uma célula <cite>GRU ou LSTM &lt;link://filename/posts/gru-e-lstm.rst&gt;_</cite> que realiza o processamento.</p>
+<p>O grande "truque" está no mecanismo de codificação-decodificação, na prática são 2 redes neurais recorrentes bem simples que compartilham uma mesma camada oculta e não tem camada de ativação, só uma célula <a class="reference external" href="posts/gru-e-lstm">GRU ou LSTM</a> que realiza o processamento.</p>
 <p>A informação que dá sentido à ambas as redes é a camada oculta, é sobre ela que incide o treinamento, portanto essa é a camada responsável por fazer a relação entre as saídas de cada rede neural.</p>
-<p>Mas por não haver uma classificação, precisaremos de mais uma rede neural (3 até agora) que será como a rede de decodificação mas com funções de ativação para que sobre ela seja realizado o treinamento da camada oculta.</p>
 <p>Então o que temos até o momento é:</p>
 <ul>
 <li>
@@ -308,16 +692,6 @@ tanh = \frac{e^x - e^-x}{e^x + e^{-x}}
 <ul class="simple">
 <li>hidden layer</li>
 <li>gru</li>
-</ul>
-</blockquote>
-</li>
-<li>
-<p class="first">att decoder:</p>
-<blockquote>
-<ul class="simple">
-<li>hidden layer</li>
-<li>gru</li>
-<li>função linear</li>
 </ul>
 </blockquote>
 </li>
@@ -392,15 +766,12 @@ tanh = \frac{e^x - e^-x}{e^x + e^{-x}}
 <p class="first">reduzi as dimensões e plotei o gráfico</p>
 </li>
 </ol>
-<img alt="/images/classificacao_1_scatter_voc.png" src="images/classificacao_1_scatter_voc.png"><p><a href="posts/classificacao-1/#id1"><span class="problematic" id="id2">**</span></a>explicando as cores:</p>
-<div class="system-message" id="id1">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">&lt;string&gt;</tt>, line 19); <em><a href="posts/classificacao-1/#id2">backlink</a></em></p>
-Inline strong start-string without end-string.</div>
+<img alt="/images/classificacao_1_scatter_vec.png" src="images/classificacao_1_scatter_vec.png"><p><strong>explicando as cores:</strong></p>
 <!-- vermelho: vocabulário do texto 1 -->
 <!-- ciano: vocabulário do texto 2 -->
 <!-- branco: vocabulário em comum a ambos -->
 <p>Como é possível perceber acima, não identificamos um nível de separação consistente entre os vocabulários, olhando a densidade de concentração do vocabulário nos dois textos, descartando as palavras em comum, temos a imagem abaixo:</p>
-<img alt="/images/classificação_1_kde_voc.png" src="images/classifica%C3%A7%C3%A3o_1_kde_voc.png"><p>Os centros estão muito próximos, ou seja, mesmo identificando as regiões mais densas nos vocabulários, ao tentar usar esta região como métrica, a similaridade de sentido entre os termos para o texto 1 e para o texto 2 continuam muito próximas tornando essa estratégia bem ineficaz.</p>
+<img alt="/images/classificacao_1_kde_vec.png" src="images/classificacao_1_kde_vec.png"><p>Os centros estão muito próximos, ou seja, mesmo identificando as regiões mais densas nos vocabulários, ao tentar usar esta região como métrica, a similaridade de sentido entre os termos para o texto 1 e para o texto 2 continuam muito próximas tornando essa estratégia bem ineficaz.</p>
 <p>A solução está na compreensão que um texto não são apenas palavras soltas, mas o sentifo extrapola a simples junção de palavras, então a ordem do que está escrito importa, a disposição das palavras no texto importa muito.</p>
 <p>Nas próximas anotações abordarei sobre o uso de redes convolucionais e redes neurais recorrentes, diferentes formas de tentar burlar as dificuldades aqui apresentadas.</p>
 </div>
@@ -570,83 +941,83 @@ IDF(t) = log_e(\frac{quantidade\ total\ de\ textos}{numero\ de\ textos\ em\ que\
 <h2>TF-IDF</h2>
 <p>Como quase tudo no sklearn...</p>
 <table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-1"> 1</a>
-<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-2"> 2</a>
-<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-3"> 3</a>
-<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-4"> 4</a>
-<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-5"> 5</a>
-<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-6"> 6</a>
-<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-7"> 7</a>
-<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-8"> 8</a>
-<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-9"> 9</a>
-<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-10">10</a>
-<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-11">11</a>
-<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-12">12</a>
-<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-13">13</a>
-<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_34e6594eb158474ab1576df2ac03ec24-14">14</a></pre></div></td>
-<td class="code"><pre class="code python"><a name="rest_code_34e6594eb158474ab1576df2ac03ec24-1"></a><span class="kn">import</span> <span class="nn">wikipedia</span>
-<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-2"></a><span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
-<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-3"></a><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
-<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-4"></a>
-<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-5"></a><span class="n">stopw</span> <span class="o">=</span> <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"portuguese"</span><span class="p">)</span> <span class="o">+</span>\
-<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-6"></a>        <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"english"</span><span class="p">)</span>
-<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-7"></a>
-<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-8"></a><span class="n">wikipedia</span><span class="o">.</span><span class="n">set_lang</span><span class="p">(</span><span class="s2">"pt"</span><span class="p">)</span>
-<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-9"></a><span class="n">text</span> <span class="o">=</span> <span class="n">wikipedia</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"Alan_Turing"</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
-<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-10"></a>
-<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-11"></a><span class="n">tfidf</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="n">stopw</span><span class="p">)</span>
-<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-12"></a>
-<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-13"></a><span class="n">X</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span>
-<a name="rest_code_34e6594eb158474ab1576df2ac03ec24-14"></a><span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+<td class="linenos"><div class="linenodiv"><pre><a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-1"> 1</a>
+<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-2"> 2</a>
+<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-3"> 3</a>
+<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-4"> 4</a>
+<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-5"> 5</a>
+<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-6"> 6</a>
+<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-7"> 7</a>
+<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-8"> 8</a>
+<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-9"> 9</a>
+<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-10">10</a>
+<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-11">11</a>
+<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-12">12</a>
+<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-13">13</a>
+<a href="posts/estatistica-tf-idf-e-lsa/#rest_code_7cb1fdbb029842fa809f3b6af21acd22-14">14</a></pre></div></td>
+<td class="code"><pre class="code python"><a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-1"></a><span class="kn">import</span> <span class="nn">wikipedia</span>
+<a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-2"></a><span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span>
+<a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-3"></a><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-4"></a>
+<a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-5"></a><span class="n">stopw</span> <span class="o">=</span> <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"portuguese"</span><span class="p">)</span> <span class="o">+</span>\
+<a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-6"></a>        <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"english"</span><span class="p">)</span>
+<a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-7"></a>
+<a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-8"></a><span class="n">wikipedia</span><span class="o">.</span><span class="n">set_lang</span><span class="p">(</span><span class="s2">"pt"</span><span class="p">)</span>
+<a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-9"></a><span class="n">text</span> <span class="o">=</span> <span class="n">wikipedia</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"Alan_Turing"</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
+<a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-10"></a>
+<a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-11"></a><span class="n">tfidf</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">stop_words</span><span class="o">=</span><span class="n">stopw</span><span class="p">)</span>
+<a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-12"></a>
+<a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-13"></a><span class="n">X</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">())</span>
+<a name="rest_code_7cb1fdbb029842fa809f3b6af21acd22-14"></a><span class="n">X</span><span class="o">.</span><span class="n">shape</span>
 </pre></td>
 </tr></table>
 <p>Na penúltima linha usei o <cite>splitlines</cite> para dividir o texto em parágrafos, assim podemos posteriormente coletar informações sobre os termos relevantes para cada parágrafo, mas admito esta forma ser demasiadamente simplista pois neste caso acabo considerando subtítulos como parágrafos.</p>
 <p>Internamente, o objeto que criamos, durante o treinamento, armazena um dicionário com as palavras e um "id", vamos usar isso para converter os termos:</p>
-<pre class="code python"><a name="rest_code_13bdd8d59ba844dcbc93ff2b1ac1af6c-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">X</span>
-<a name="rest_code_13bdd8d59ba844dcbc93ff2b1ac1af6c-2"></a><span class="o">&lt;</span><span class="mi">61</span><span class="n">x664</span> <span class="n">sparse</span> <span class="n">matrix</span> <span class="n">of</span> <span class="nb">type</span> <span class="s1">'&lt;class '</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="s1">'&gt;'</span>
-<a name="rest_code_13bdd8d59ba844dcbc93ff2b1ac1af6c-3"></a>    <span class="k">with</span> <span class="mi">862</span> <span class="n">stored</span> <span class="n">elements</span> <span class="ow">in</span> <span class="n">Compressed</span> <span class="n">Sparse</span> <span class="n">Row</span> <span class="n">format</span><span class="o">&gt;</span>
+<pre class="code python"><a name="rest_code_aaf91543a0d342dcac0dc2d7b53ad8d2-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">X</span>
+<a name="rest_code_aaf91543a0d342dcac0dc2d7b53ad8d2-2"></a><span class="o">&lt;</span><span class="mi">61</span><span class="n">x664</span> <span class="n">sparse</span> <span class="n">matrix</span> <span class="n">of</span> <span class="nb">type</span> <span class="s1">'&lt;class '</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="s1">'&gt;'</span>
+<a name="rest_code_aaf91543a0d342dcac0dc2d7b53ad8d2-3"></a>    <span class="k">with</span> <span class="mi">862</span> <span class="n">stored</span> <span class="n">elements</span> <span class="ow">in</span> <span class="n">Compressed</span> <span class="n">Sparse</span> <span class="n">Row</span> <span class="n">format</span><span class="o">&gt;</span>
 </pre>
 <p>A matriz esparsa tem diversas vantagens quando tratamos com longos arrays rechados de zeros, talvez o produto principal nessa implementação seja exatamente essa matriz que indica em cada parágrafo quais os termos presentes e a sua frequência, que é o ponto principal do TF-IDF.</p>
 <img alt="visualização da matriz resultante" src="images/lsa.png"><p>E é exatamente sobre essa matriz que chegamos no LSA (Latent Semantic Analysis), mas antes vamos ver quais as palavras mais relevantes do primeiro parágrafo:</p>
-<pre class="code python"><a name="rest_code_160098d8b64746b1997153fbce992da6-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">ft_name</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">()</span>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-2"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">top_tfidf</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-3"></a><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_tfidf</span><span class="p">[:</span><span class="mi">10</span><span class="p">]:</span>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-4"></a>        <span class="k">print</span><span class="p">(</span><span class="n">ft_name</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-5"></a>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-6"></a><span class="n">computação</span>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-7"></a><span class="n">cheshire</span>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-8"></a><span class="n">junho</span>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-9"></a><span class="n">ciência</span>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-10"></a><span class="n">influente</span>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-11"></a><span class="n">algoritmo</span>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-12"></a><span class="n">east</span>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-13"></a><span class="n">lógico</span>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-14"></a><span class="n">desenvolvimento</span>
-<a name="rest_code_160098d8b64746b1997153fbce992da6-15"></a><span class="n">desempenhando</span>
+<pre class="code python"><a name="rest_code_93175e2afb5b462d871d714b20642d30-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">ft_name</span> <span class="o">=</span> <span class="n">tfidf</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">()</span>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-2"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">top_tfidf</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-3"></a><span class="o">&gt;&gt;&gt;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">top_tfidf</span><span class="p">[:</span><span class="mi">10</span><span class="p">]:</span>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-4"></a>        <span class="k">print</span><span class="p">(</span><span class="n">ft_name</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-5"></a>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-6"></a><span class="n">computação</span>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-7"></a><span class="n">cheshire</span>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-8"></a><span class="n">junho</span>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-9"></a><span class="n">ciência</span>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-10"></a><span class="n">influente</span>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-11"></a><span class="n">algoritmo</span>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-12"></a><span class="n">east</span>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-13"></a><span class="n">lógico</span>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-14"></a><span class="n">desenvolvimento</span>
+<a name="rest_code_93175e2afb5b462d871d714b20642d30-15"></a><span class="n">desempenhando</span>
 </pre>
 <p>O ft_name é a lista de termos que irá converter para string a posição do termo indicada quando ordenamos o array comtendo o valor calculado para cada termo devolvendo as respectivas posições.</p>
 </div>
 <div class="section" id="lsa">
 <h2>LSA</h2>
 <p>O LSA é nada mais que usar o <a class="reference external" href="posts/svd-vs-pca">SVD</a> mas em vez de diminuir as dimensões vamos manter o tamanho da matriz:</p>
-<pre class="code python"><a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
-<a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-2"></a><span class="p">(</span><span class="mi">61</span><span class="p">,</span> <span class="mi">664</span><span class="p">)</span>
-<a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-3"></a>
-<a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-4"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">lsa</span> <span class="o">=</span> <span class="n">TruncatedSVD</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">61</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-5"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">lsa</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-6"></a><span class="n">TruncatedSVD</span><span class="p">(</span><span class="n">algorithm</span><span class="o">=</span><span class="s1">'randomized'</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">61</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-<a name="rest_code_e85c4ba69569446fa6efd42b17e1cce0-7"></a>   <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_8576c53e09a1446d9c200ae950318432-1"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+<a name="rest_code_8576c53e09a1446d9c200ae950318432-2"></a><span class="p">(</span><span class="mi">61</span><span class="p">,</span> <span class="mi">664</span><span class="p">)</span>
+<a name="rest_code_8576c53e09a1446d9c200ae950318432-3"></a>
+<a name="rest_code_8576c53e09a1446d9c200ae950318432-4"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">lsa</span> <span class="o">=</span> <span class="n">TruncatedSVD</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">61</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<a name="rest_code_8576c53e09a1446d9c200ae950318432-5"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">lsa</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<a name="rest_code_8576c53e09a1446d9c200ae950318432-6"></a><span class="n">TruncatedSVD</span><span class="p">(</span><span class="n">algorithm</span><span class="o">=</span><span class="s1">'randomized'</span><span class="p">,</span> <span class="n">n_components</span><span class="o">=</span><span class="mi">61</span><span class="p">,</span> <span class="n">n_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+<a name="rest_code_8576c53e09a1446d9c200ae950318432-7"></a>   <span class="n">random_state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 </pre>
 <p>O real poder do LSA vem desse tratamento dado à matriz formada a partir do TF-IDF, o código abaixo indica as palavras mais relevantes para cada parágrafo:</p>
-<pre class="code python"><a name="rest_code_cf73a290231c404e81b2744e9deead7d-1"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lsa</span><span class="o">.</span><span class="n">components_</span><span class="p">):</span>
-<a name="rest_code_cf73a290231c404e81b2744e9deead7d-2"></a>    <span class="n">terms_in_comp</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ft_name</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
-<a name="rest_code_cf73a290231c404e81b2744e9deead7d-3"></a>    <span class="n">sorted_terms</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">terms_in_comp</span><span class="p">,</span>
-<a name="rest_code_cf73a290231c404e81b2744e9deead7d-4"></a>                          <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
-<a name="rest_code_cf73a290231c404e81b2744e9deead7d-5"></a>
-<a name="rest_code_cf73a290231c404e81b2744e9deead7d-6"></a>    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">"paragrafo: {i}"</span><span class="p">)</span>
-<a name="rest_code_cf73a290231c404e81b2744e9deead7d-7"></a>    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sorted_terms</span><span class="p">:</span>
-<a name="rest_code_cf73a290231c404e81b2744e9deead7d-8"></a>        <span class="k">print</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<a name="rest_code_cf73a290231c404e81b2744e9deead7d-9"></a>    <span class="k">print</span><span class="p">(</span><span class="s2">"-"</span><span class="o">*</span><span class="mi">20</span><span class="p">)</span>
+<pre class="code python"><a name="rest_code_5eddfef9e5e04ca2a5e679e9a0e194e3-1"></a><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lsa</span><span class="o">.</span><span class="n">components_</span><span class="p">):</span>
+<a name="rest_code_5eddfef9e5e04ca2a5e679e9a0e194e3-2"></a>    <span class="n">terms_in_comp</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ft_name</span><span class="p">,</span> <span class="n">comp</span><span class="p">)</span>
+<a name="rest_code_5eddfef9e5e04ca2a5e679e9a0e194e3-3"></a>    <span class="n">sorted_terms</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">terms_in_comp</span><span class="p">,</span>
+<a name="rest_code_5eddfef9e5e04ca2a5e679e9a0e194e3-4"></a>                          <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
+<a name="rest_code_5eddfef9e5e04ca2a5e679e9a0e194e3-5"></a>
+<a name="rest_code_5eddfef9e5e04ca2a5e679e9a0e194e3-6"></a>    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s2">"paragrafo: {i}"</span><span class="p">)</span>
+<a name="rest_code_5eddfef9e5e04ca2a5e679e9a0e194e3-7"></a>    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sorted_terms</span><span class="p">:</span>
+<a name="rest_code_5eddfef9e5e04ca2a5e679e9a0e194e3-8"></a>        <span class="k">print</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<a name="rest_code_5eddfef9e5e04ca2a5e679e9a0e194e3-9"></a>    <span class="k">print</span><span class="p">(</span><span class="s2">"-"</span><span class="o">*</span><span class="mi">20</span><span class="p">)</span>
 </pre>
 <p>Pegando apenas o parágrafo 0, o resultado que temos é:</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -675,311 +1046,10 @@ IDF(t) = log_e(\frac{quantidade\ total\ de\ textos}{numero\ de\ textos\ em\ que\
 <li>E para gerar estatísticas de relevância de um texto inteiro, basta não dividir em parágrafos</li>
 <li>E para gerarmos aquele bag of words que está na moda temos algumas opções, dependendo do caso aplicamos só o <strong>TF</strong> para gerar um ranking, para outros casos o <strong>TF-IDF</strong> funciona melhor, especialmente quando juntamos vários textos como uma análise geral de várias páginas de blogs, o LSA tende a ser melhor em usos mais específicos porém nada impede de usa-lo para gerar o ranking de termos para um livro, por exemplo.</li>
 </ol>
-<div class="notebook">
-    <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/estatistica-tf-idf-e-lsa.ipynb">code</a>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">notebook usado: <a class="reference external" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/estatistica-tf-idf-e-lsa.ipynb">link para o nbviewer</a></p>
 </div>
-</div>
-</div>
-    </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/word2vec-3-skip-gram/" class="u-url">word2vec 3: skip-gram</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Lincoln de Macêdo
-            </span></p>
-            <p class="dateline">
-            <a href="posts/word2vec-3-skip-gram/" rel="bookmark">
-            <time class="published dt-published" datetime="2018-12-07T01:43:36-03:00" itemprop="datePublished" title="2018-12-07 01:43">2018-12-07 01:43</time></a>
-            </p>
-                <p class="commentline">
-        
-    <a href="posts/word2vec-3-skip-gram/#disqus_thread" data-disqus-identifier="cache/posts/word2vec-3-skip-gram.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="e-content entry-content">
-    <div>
-<p>Como já dito antes, o skip-gram faz um treinamento meio que ao contrário do cbow, no treinamento a rede neural recebe as palavras centrais para tentar prever as palavras de contexto e assim ajusta os pesos das camadas da rede neural aproximando valores para palavras semelhantes no hiperplano.</p>
-<pre class="code python"><a name="rest_code_d7a929b15f6a469cada19f39350511fd-1"></a><span class="n">window</span> <span class="o">=</span> <span class="mi">2</span>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-2"></a><span class="n">pair_ids</span> <span class="o">=</span> <span class="p">[]</span>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-3"></a>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-4"></a><span class="n">text_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus_text</span><span class="p">)</span>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-5"></a>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-6"></a><span class="n">corpus_text</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">corpus_text</span><span class="p">)</span>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-7"></a><span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-8"></a>           <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">window</span><span class="p">,</span> <span class="n">window</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">]</span>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-9"></a>       <span class="p">)</span>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-10"></a>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-11"></a><span class="k">for</span> <span class="n">center_word</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">text_size</span><span class="o">-</span><span class="n">window</span><span class="p">):</span>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-12"></a>    <span class="n">center_word_id</span> <span class="o">=</span> <span class="n">word2id</span><span class="p">[</span><span class="n">corpus_text</span><span class="p">[</span><span class="n">center_word</span><span class="p">]]</span>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-13"></a>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">corpus_text</span><span class="p">[</span><span class="n">mask</span> <span class="o">+</span> <span class="n">center_word</span><span class="p">]:</span>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-14"></a>        <span class="n">context_word_id</span> <span class="o">=</span> <span class="n">word2id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-15"></a>        <span class="n">pair_ids</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">center_word_id</span><span class="p">,</span> <span class="n">context_word_id</span><span class="p">])</span>
-<a name="rest_code_d7a929b15f6a469cada19f39350511fd-16"></a><span class="n">pair_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pair_ids</span><span class="p">)</span>
-</pre>
-<p>A única diferença do código acima para criar os pares de ids está na ordem: primeiro a palavra central e depois a palavra de contexto:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="25%">
-<col width="25%">
-<col width="25%">
-<col width="25%">
-</colgroup>
-<thead valign="bottom"><tr>
-<th class="head">central</th>
-<th class="head">contexto</th>
-<th class="head">central</th>
-<th class="head">contexto</th>
-</tr></thead>
-<tbody valign="top">
-<tr>
-<td>604</td>
-<td>97</td>
-<td>máquina</td>
-<td>desempenhando</td>
-</tr>
-<tr>
-<td>75</td>
-<td>302</td>
-<td>turing</td>
-<td>computação</td>
-</tr>
-<tr>
-<td>75</td>
-<td>604</td>
-<td>turing</td>
-<td>máquina</td>
-</tr>
-<tr>
-<td>75</td>
-<td>97</td>
-<td>turing</td>
-<td>desempenhando</td>
-</tr>
-<tr>
-<td>75</td>
-<td>277</td>
-<td>turing</td>
-<td>papel</td>
-</tr>
-<tr>
-<td>97</td>
-<td>604</td>
-<td>desempenhando</td>
-<td>máquina</td>
-</tr>
-<tr>
-<td>97</td>
-<td>75</td>
-<td>desempenhando</td>
-<td>turing</td>
-</tr>
-<tr>
-<td>97</td>
-<td>277</td>
-<td>desempenhando</td>
-<td>papel</td>
-</tr>
-<tr>
-<td>97</td>
-<td>409</td>
-<td>desempenhando</td>
-<td>importante</td>
-</tr>
-<tr>
-<td>277</td>
-<td>75</td>
-<td>papel</td>
-<td>turing</td>
-</tr>
-<tr>
-<td>277</td>
-<td>97</td>
-<td>papel</td>
-<td>desempenhando</td>
-</tr>
-</tbody>
-</table>
-<p>O modelo da rede neural não se difere muito da usada no cbow, a única diferença fica por conta do tamanho da entrada da primeira função linear, já que passaremos 1 id por vez e não 4 como no cbow.</p>
-<pre class="code python"><a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-1"></a><span class="k">class</span> <span class="nc">CBOW</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">):</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-3"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">CBOW</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-4"></a>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">)</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-6"></a>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span> <span class="o">=</span>  <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">emb_size</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span> <span class="c1"># única diferença aqui</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">)</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-9"></a>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">log_softmax</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LogSoftmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-11"></a>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-12"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-13"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-14"></a>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-15"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-16"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-17"></a>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-18"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-19"></a>        <span class="k">return</span> <span class="n">out</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-20"></a>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-21"></a>    <span class="k">def</span> <span class="nf">get_word_emb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_id</span><span class="p">):</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-22"></a>        <span class="n">word</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([</span><span class="n">word_id</span><span class="p">])</span>
-<a name="rest_code_bfb053bc8fe84bd6bc826f8dc55d430a-23"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-</pre>
-<p>De modo geral o nível de erro (ou perda, nunca sei ao certo como traduzir "loss" neste contexto) no skip-gram é maior que no cbow, mas repito que o importante é que esteja havendo um aprendizado e não que a rede neural se adapte ao ponto de prever todas as palavras relacionadas ainda que ocasionalmente isso ocorra, para nós interessa o seguinte movimento: numa época a rede neural elevar os valores das palavras próximas na saída e afastar as mais distantes, assim naturalmente ela vai aprendendo a agrupar palavras em regiões de um hiperplano aproximando ou afastando de acordo com o modo como as palavras são usadas, tendendo a manter um distanciamento relacionado ao seu valor semântico.</p>
-<img alt="/images/word2vec-skipgram-loss.png" src="images/word2vec-skipgram-loss.png"><p>Reduzindo as dimensões para visualizar a distribuição...</p>
-<img alt="/images/word2vec-skipgram-1.png" src="images/word2vec-skipgram-1.png" style="width: 500px;"><p>Logicamente dessa forma como implementei, o custo/perda/loss é mais alto que na implementação feita do cbow, afinal vamos aos poucos ajustando 4 resultados possíveis para cada termo. Neste exemplo aumentei a quantidade de épocas para 2500 e ainda assim ficou imensamente distante do resultado da implementação do cbow neste aspecto, porém a relação entre as palavras se mostrou um pouco melhor ainda que longe do ideal.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="25%">
-<col width="25%">
-<col width="25%">
-<col width="25%">
-</colgroup>
-<thead valign="bottom"><tr>
-<th class="head">rank sim cos</th>
-<th class="head"><ul class="first last simple"><li>
-</li></ul></th>
-<th class="head">rank dist eucl</th>
-<th class="head"><ul class="first last simple"><li>
-</li></ul></th>
-</tr></thead>
-<tbody valign="top">
-<tr>
-<td>muitos</td>
-<td>0.14544</td>
-<td>muitos</td>
-<td>0.07375</td>
-</tr>
-<tr>
-<td>poderia</td>
-<td>0.26087</td>
-<td>code</td>
-<td>0.08692</td>
-</tr>
-<tr>
-<td>ceruzzi</td>
-<td>0.28141</td>
-<td>ceruzzi</td>
-<td>0.08939</td>
-</tr>
-<tr>
-<td>code</td>
-<td>0.28206</td>
-<td>condados</td>
-<td>0.09595</td>
-</tr>
-<tr>
-<td>britânica</td>
-<td>0.28430</td>
-<td>mortem</td>
-<td>0.09709</td>
-</tr>
-<tr>
-<td>mortem</td>
-<td>0.33544</td>
-<td>atos</td>
-<td>0.10284</td>
-</tr>
-<tr>
-<td>condenado</td>
-<td>0.33660</td>
-<td>teórica</td>
-<td>0.10357</td>
-</tr>
-<tr>
-<td>comerciantes</td>
-<td>0.33929</td>
-<td>condenado</td>
-<td>0.10376</td>
-</tr>
-<tr>
-<td>cabeceira</td>
-<td>0.34548</td>
-<td>rápido</td>
-<td>0.10433</td>
-</tr>
-<tr>
-<td>condados</td>
-<td>0.36041</td>
-<td>prazer</td>
-<td>0.10648</td>
-</tr>
-</tbody>
-</table>
-<img alt="/images/word2vec-skipgram-rank.png" src="images/word2vec-skipgram-rank.png"><p>Só lembrando que segui o mesmo padrão de cores:</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name">
-<col class="field-body">
-<tbody valign="top">
-<tr class="field">
-<th class="field-name">amarelo:</th>
-<td class="field-body">Palavra escolhida</td>
-</tr>
-<tr class="field">
-<th class="field-name">vermelho:</th>
-<td class="field-body">Termos mais próximos pela similaridade de cossenos</td>
-</tr>
-<tr class="field">
-<th class="field-name">azul:</th>
-<td class="field-body">Termos mais próximos pela distância euclidiana</td>
-</tr>
-<tr class="field">
-<th class="field-name">roxo:</th>
-<td class="field-body">Termos que ambas as métricas concordam</td>
-</tr>
-</tbody>
-</table>
-<div class="notebook">
-    <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/word2vec-3-skipgram.ipynb">code</a>
-</div>
-</div>
-    </div>
-    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/svd-vs-pca/" class="u-url">SVD vs PCA</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
-                Lincoln de Macêdo
-            </span></p>
-            <p class="dateline">
-            <a href="posts/svd-vs-pca/" rel="bookmark">
-            <time class="published dt-published" datetime="2018-12-07T01:26:29-03:00" itemprop="datePublished" title="2018-12-07 01:26">2018-12-07 01:26</time></a>
-            </p>
-                <p class="commentline">
-        
-    <a href="posts/svd-vs-pca/#disqus_thread" data-disqus-identifier="cache/posts/svd-vs-pca.html">Comments</a>
-
-
-        </p>
-</div>
-    </header><div class="e-content entry-content">
-    <div>
-<p>Não vou tratar aqui de como se implementa o PCA e o SVD, prefiro indicar esses tutoriais abaixo, eles foram muito bem escritos e são muito claros sobre como são os cálculos usados:</p>
-<ul class="simple">
-<li><a class="reference external" href="https://sebastianraschka.com/Articles/2014_pca_step_by_step.html">tutorial PCA</a></li>
-<li><a class="reference external" href="https://machinelearningmastery.com/singular-value-decomposition-for-machine-learning/">tutorial SVD</a></li>
-</ul>
-<p>Embora esses métodos possam ser usados para compressão de dados, análises populacionais e uma infinidade de análises envolvendo dados organizados em matrizes, aqui prefiro comparar cada método e discutir o uso voltado à redução de dimensões a fim que possamos visualizar os dados dessas anotações,</p>
-<p>mas antes de chegar nas discussões, vamos ver alguns gráficos mostrando o que o SVD e o PCA retornaram quando os usamos para reduzir dimensões de matrizes:</p>
-<img alt="/images/svd_pca_0_3d.png" src="images/svd_pca_0_3d.png"><img alt="/images/svd_pca_1_3dreduction.png" src="images/svd_pca_1_3dreduction.png"><p>curiosamente vemos que ocorreu uma rotação no gráfico do PCA e que o gráfico do SVD mantém uma certa similaridade visual com o gráfico original em 3D. Só compreendi melhor vendo <a class="reference external" href="https://www.quora.com/What-is-the-difference-between-PCA-and-SVD/answer/Adarsh-131">esta resposta no Quora</a>:</p>
-<blockquote>
-<p>"Geometrically PCA corresponds to “centering the dataset”, and then rotating it to align the axis of highest variance with the principle axis."</p>
-<p><em>Geometricamente, PCA corresponde a "centralização do dataset", e depois rotaciona para alinhar o eixo de maior variância com o eixo principal</em></p>
-</blockquote>
-<p>Lógico que nem sempre acontece de ambos as representações ficarem tão diferentes, para observar melhor isso resolvi seguir um <a class="reference external" href="https://scikit-learn.org/stable/auto_examples/cluster/plot_kmeans_digits.html#sphx-glr-auto-examples-cluster-plot-kmeans-digits-py">exemplo da documentação do sklearn</a></p>
-<img alt="/images/svd_pca_2_64reduction.png" src="images/svd_pca_2_64reduction.png"><p>A imagem acima mostra que deve ter coincidido a forma como o SVD reduziu as dimensões e a rotação feita pelo PCA, só lembrando o que está de forma muito explícita no link para o Quora: o PCA usa o SVD para criar um ranking, afinal PCA significa "análise do componente principal" e o SVD fornece um dos passos para chegar ao componente pricipal.</p>
-<p>Mas o KMeans realiza um aprendizado não supervisionado, e ainda especialmente neste caso onde a redução de 64 dimensões para 2 com certeza não deu margem para que os dados fossem linearmente separáveis, resolvi usar o SVM para desenhar o espaço para cada classe.</p>
-<img alt="/images/svd_pca_3_svm.png" src="images/svd_pca_3_svm.png"><p>Algo que se deve ressaltar no gráfico acima é que os pontos semi-transparentes que adicionei ao gráfico são os que os classificadores treinados erraram, sobre isso repare no resultado abaixo:</p>
-<pre class="code text"><a name="rest_code_27e20de9dad84d098793720e7653c63b-1"></a>erros SVD: 704 de 1797
-<a name="rest_code_27e20de9dad84d098793720e7653c63b-2"></a>erros PCA: 704 de 1797
-<a name="rest_code_27e20de9dad84d098793720e7653c63b-3"></a>erros normal: 0 de 1797
-<a name="rest_code_27e20de9dad84d098793720e7653c63b-4"></a>-----------------------
-<a name="rest_code_27e20de9dad84d098793720e7653c63b-5"></a>percentuais de acertos:
-<a name="rest_code_27e20de9dad84d098793720e7653c63b-6"></a>&gt; SVD: 60.824%
-<a name="rest_code_27e20de9dad84d098793720e7653c63b-7"></a>&gt; pca: 60.824%
-<a name="rest_code_27e20de9dad84d098793720e7653c63b-8"></a>&gt; normal: 100.000%
-</pre>
-<p>Considerei "normal" como a aplicação do SVM sem reduzir as dimensões. Estes resultados mostram que a sobreposição de dados na redução de dimensões assim como a distorção que ocorre nas transformações feitas com as matrizes, tende a dificultar o trabalho dos algoritmos, mesmo mantendo um certo nível de fidelidade com a distribuição original dos dadosm o melhor é usar essa redução mais para visualizar do que para aplicar métricas ou classificadores, e por isso também que nas notas onde uso distância euclidiana e similaridade de cossenos, ao reduzir as dimensões os resultados parecem errados ainda que nas dimensões originais esteja correto.</p>
-<div class="notebook">
-    <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/SVD-PCA.ipynb">code</a>
 </div>
 </div>
     </div>
@@ -990,7 +1060,7 @@ IDF(t) = log_e(\frac{quantidade\ total\ de\ textos}{numero\ de\ textos\ em\ que\
 <li class="next">
                 <a href="index-1.html" rel="next">Posts mais antigos</a>
             </li>
-        </ul></nav><script>var disqus_shortname="demacdolincoln";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script></main><footer id="footer"><p>Contents © 2018         <a href="mailto:demacdolincoln@gmail.com">Lincoln de Macêdo</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+        </ul></nav><script>var disqus_shortname="demacdolincoln";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script></main><footer id="footer"><p>Contents © 2019         <a href="mailto:demacdolincoln@gmail.com">Lincoln de Macêdo</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
             
         </footer>
 </div>
