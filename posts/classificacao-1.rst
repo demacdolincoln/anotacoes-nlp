@@ -23,9 +23,9 @@ Esse seria o caminho mais óbvio, tendo em vista que temos uma representação e
 3. peguei as posições correspondentes a cada palavra no skip-gram já treinado
 4. reduzi as dimensões e plotei o gráfico
 
-.. image:: /images/classificacao_1_scatter_voc.png
+.. image:: /images/classificacao_1_scatter_vec.png
 
-**explicando as cores:
+**explicando as cores:**
 
 .. vermelho: vocabulário do texto 1
 .. ciano: vocabulário do texto 2
@@ -33,7 +33,7 @@ Esse seria o caminho mais óbvio, tendo em vista que temos uma representação e
 
 Como é possível perceber acima, não identificamos um nível de separação consistente entre os vocabulários, olhando a densidade de concentração do vocabulário nos dois textos, descartando as palavras em comum, temos a imagem abaixo:
 
-.. image:: /images/classificação_1_kde_voc.png
+.. image:: /images/classificacao_1_kde_vec.png
 
 Os centros estão muito próximos, ou seja, mesmo identificando as regiões mais densas nos vocabulários, ao tentar usar esta região como métrica, a similaridade de sentido entre os termos para o texto 1 e para o texto 2 continuam muito próximas tornando essa estratégia bem ineficaz.
 

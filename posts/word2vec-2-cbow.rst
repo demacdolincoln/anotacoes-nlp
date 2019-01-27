@@ -187,8 +187,4 @@ Observando onde cada termo está com as dimensões da camada incorporada da rede
 É compreensível ver estas distâncias tão em desarcodo pelo fato das distorções da redução de dimensões, de 10 para 2.
 
 
-.. raw:: html
-
-    <div class="notebook">
-        <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/word2vec-2-cbow.ipynb">code</a>
-    </div>
+.. note:: notebook usado: `link para o nbviewer <http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/word2vec-2-cbow.ipynb>`_

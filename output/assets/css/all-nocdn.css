@@ -1044,6 +1044,10 @@ pre.code, code {
     text-transform: uppercase;
 }
 
+.admonition.note {
+    color: black;
+    background-color: #dbdbdbe6;
+}
 /*!
  * baguetteBox.js
  * @author  feimosi

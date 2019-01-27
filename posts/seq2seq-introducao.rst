@@ -12,11 +12,9 @@ Tenho certeza que todos ao menos uma vez se perguntaram, pelo menos nas primeira
 encoder - decoder
 -----------------
 
-O grande "truque" está no mecanismo de codificação-decodificação, na prática são 2 redes neurais recorrentes bem simples que compartilham uma mesma camada oculta e não tem camada de ativação, só uma célula `GRU ou LSTM <link://filename/posts/gru-e-lstm.rst>_` que realiza o processamento.
+O grande "truque" está no mecanismo de codificação-decodificação, na prática são 2 redes neurais recorrentes bem simples que compartilham uma mesma camada oculta e não tem camada de ativação, só uma célula `GRU ou LSTM <link://filename/posts/gru-e-lstm.rst>`_ que realiza o processamento.
 
 A informação que dá sentido à ambas as redes é a camada oculta, é sobre ela que incide o treinamento, portanto essa é a camada responsável por fazer a relação entre as saídas de cada rede neural.
-
-Mas por não haver uma classificação, precisaremos de mais uma rede neural (3 até agora) que será como a rede de decodificação mas com funções de ativação para que sobre ela seja realizado o treinamento da camada oculta.
 
 Então o que temos até o momento é:
 
@@ -29,12 +27,6 @@ Então o que temos até o momento é:
 
     - hidden layer
     - gru
-
-* att decoder:
-
-    - hidden layer
-    - gru
-    - função linear
 
 Treinamento
 -----------

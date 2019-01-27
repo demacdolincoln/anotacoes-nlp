@@ -7,19 +7,23 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/</loc>
-  <lastmod>2018-12-31T17:59:00Z</lastmod>
+  <lastmod>2019-01-22T06:24:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/2018/</loc>
   <lastmod>2018-12-11T06:32:00Z</lastmod>
  </url>
  <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/2019/</loc>
+  <lastmod>2019-01-22T06:24:00Z</lastmod>
+ </url>
+ <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/archive.html</loc>
-  <lastmod>2018-12-25T23:45:00Z</lastmod>
+  <lastmod>2019-01-27T02:57:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/</loc>
-  <lastmod>2018-12-25T16:11:00Z</lastmod>
+  <lastmod>2019-01-22T06:24:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_classificacao/</loc>
@@ -46,8 +50,24 @@
   <lastmod>2018-12-25T16:11:00Z</lastmod>
  </url>
  <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cnn/</loc>
+  <lastmod>2019-01-22T06:24:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/gru/</loc>
+  <lastmod>2019-01-22T06:24:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/lstm/</loc>
+  <lastmod>2019-01-22T06:24:00Z</lastmod>
+ </url>
+ <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/modelagem/</loc>
   <lastmod>2018-12-25T08:22:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/rnn/</loc>
+  <lastmod>2019-01-22T06:24:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/utils/</loc>
@@ -59,11 +79,11 @@
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/index-1.html</loc>
-  <lastmod>2018-12-31T17:59:00Z</lastmod>
+  <lastmod>2019-01-27T04:50:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/</loc>
-  <lastmod>2018-12-25T23:45:00Z</lastmod>
+  <lastmod>2019-01-27T02:57:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/classificacao-1/</loc>
@@ -72,6 +92,14 @@
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/classificacao-2-cnn/</loc>
   <lastmod>2018-12-25T08:22:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/classificacao-3-rnn-parte-1/</loc>
+  <lastmod>2019-01-22T06:24:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/classificacao-4-rnn-parte-2-%2B-convolucao/</loc>
+  <lastmod>2019-01-27T02:57:00Z</lastmod>
  </url>
  <url>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/posts/distancia-euclidiama-vs-similaridade-de-cossenos/</loc>

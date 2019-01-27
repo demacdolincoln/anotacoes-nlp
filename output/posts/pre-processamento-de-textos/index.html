@@ -95,40 +95,40 @@ converter numa lista de">
 <p>Sempre usarei textos da wikipédia, pelo simples motivo de ser muito prático e inteiramente legal.</p>
 <div class="section" id="bibliotecas-usadas">
 <h2>bibliotecas usadas</h2>
-<pre class="code python"><a name="rest_code_ba7c2f45a518477ead457b090ef36a07-1"></a><span class="o">%</span><span class="n">pylab</span> <span class="n">inline</span>
-<a name="rest_code_ba7c2f45a518477ead457b090ef36a07-2"></a><span class="kn">import</span> <span class="nn">nltk</span>
-<a name="rest_code_ba7c2f45a518477ead457b090ef36a07-3"></a><span class="kn">import</span> <span class="nn">gensim</span>
-<a name="rest_code_ba7c2f45a518477ead457b090ef36a07-4"></a><span class="kn">import</span> <span class="nn">wikipedia</span>
+<pre class="code python"><a name="rest_code_175f60da0cb041d2b241d56aeee00903-1"></a><span class="o">%</span><span class="n">pylab</span> <span class="n">inline</span>
+<a name="rest_code_175f60da0cb041d2b241d56aeee00903-2"></a><span class="kn">import</span> <span class="nn">nltk</span>
+<a name="rest_code_175f60da0cb041d2b241d56aeee00903-3"></a><span class="kn">import</span> <span class="nn">gensim</span>
+<a name="rest_code_175f60da0cb041d2b241d56aeee00903-4"></a><span class="kn">import</span> <span class="nn">wikipedia</span>
 </pre>
 <p>No Jupyter notebook o comando <strong>%pylab</strong> importa o matplotlib e numpy e configura o modo como os gráficos serão apresentados, ocasionalmente também usarei o Altair junto com o Pandas para visualizar os dados.</p>
 </div>
 <div class="section" id="pre-processamento">
 <h2>Pré-processamento</h2>
 <table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_086bb275912d488faebb0a62db90bd0e-1"> 1</a>
-<a href="#rest_code_086bb275912d488faebb0a62db90bd0e-2"> 2</a>
-<a href="#rest_code_086bb275912d488faebb0a62db90bd0e-3"> 3</a>
-<a href="#rest_code_086bb275912d488faebb0a62db90bd0e-4"> 4</a>
-<a href="#rest_code_086bb275912d488faebb0a62db90bd0e-5"> 5</a>
-<a href="#rest_code_086bb275912d488faebb0a62db90bd0e-6"> 6</a>
-<a href="#rest_code_086bb275912d488faebb0a62db90bd0e-7"> 7</a>
-<a href="#rest_code_086bb275912d488faebb0a62db90bd0e-8"> 8</a>
-<a href="#rest_code_086bb275912d488faebb0a62db90bd0e-9"> 9</a>
-<a href="#rest_code_086bb275912d488faebb0a62db90bd0e-10">10</a>
-<a href="#rest_code_086bb275912d488faebb0a62db90bd0e-11">11</a>
-<a href="#rest_code_086bb275912d488faebb0a62db90bd0e-12">12</a></pre></div></td>
-<td class="code"><pre class="code python"><a name="rest_code_086bb275912d488faebb0a62db90bd0e-1"></a><span class="n">wikipedia</span><span class="o">.</span><span class="n">set_lang</span><span class="p">(</span><span class="s2">"pt"</span><span class="p">)</span>
-<a name="rest_code_086bb275912d488faebb0a62db90bd0e-2"></a><span class="n">text</span> <span class="o">=</span> <span class="n">wikipedia</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"Alan_Turing"</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
-<a name="rest_code_086bb275912d488faebb0a62db90bd0e-3"></a>
-<a name="rest_code_086bb275912d488faebb0a62db90bd0e-4"></a><span class="n">sentences</span> <span class="o">=</span> <span class="p">[]</span>
-<a name="rest_code_086bb275912d488faebb0a62db90bd0e-5"></a>
-<a name="rest_code_086bb275912d488faebb0a62db90bd0e-6"></a><span class="n">stop_words</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"portuguese"</span><span class="p">)</span> <span class="o">+</span>\
-<a name="rest_code_086bb275912d488faebb0a62db90bd0e-7"></a>             <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"english"</span><span class="p">)</span>
-<a name="rest_code_086bb275912d488faebb0a62db90bd0e-8"></a>
-<a name="rest_code_086bb275912d488faebb0a62db90bd0e-9"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
-<a name="rest_code_086bb275912d488faebb0a62db90bd0e-10"></a>    <span class="n">clean_text</span> <span class="o">=</span> <span class="n">gensim</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">simple_preprocess</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-<a name="rest_code_086bb275912d488faebb0a62db90bd0e-11"></a>    <span class="n">clean_text</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">clean_text</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">]</span>
-<a name="rest_code_086bb275912d488faebb0a62db90bd0e-12"></a>    <span class="n">sentences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clean_text</span><span class="p">)</span>
+<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_c148454ea0294f85811ebe2d7e9f6872-1"> 1</a>
+<a href="#rest_code_c148454ea0294f85811ebe2d7e9f6872-2"> 2</a>
+<a href="#rest_code_c148454ea0294f85811ebe2d7e9f6872-3"> 3</a>
+<a href="#rest_code_c148454ea0294f85811ebe2d7e9f6872-4"> 4</a>
+<a href="#rest_code_c148454ea0294f85811ebe2d7e9f6872-5"> 5</a>
+<a href="#rest_code_c148454ea0294f85811ebe2d7e9f6872-6"> 6</a>
+<a href="#rest_code_c148454ea0294f85811ebe2d7e9f6872-7"> 7</a>
+<a href="#rest_code_c148454ea0294f85811ebe2d7e9f6872-8"> 8</a>
+<a href="#rest_code_c148454ea0294f85811ebe2d7e9f6872-9"> 9</a>
+<a href="#rest_code_c148454ea0294f85811ebe2d7e9f6872-10">10</a>
+<a href="#rest_code_c148454ea0294f85811ebe2d7e9f6872-11">11</a>
+<a href="#rest_code_c148454ea0294f85811ebe2d7e9f6872-12">12</a></pre></div></td>
+<td class="code"><pre class="code python"><a name="rest_code_c148454ea0294f85811ebe2d7e9f6872-1"></a><span class="n">wikipedia</span><span class="o">.</span><span class="n">set_lang</span><span class="p">(</span><span class="s2">"pt"</span><span class="p">)</span>
+<a name="rest_code_c148454ea0294f85811ebe2d7e9f6872-2"></a><span class="n">text</span> <span class="o">=</span> <span class="n">wikipedia</span><span class="o">.</span><span class="n">page</span><span class="p">(</span><span class="s2">"Alan_Turing"</span><span class="p">)</span><span class="o">.</span><span class="n">content</span>
+<a name="rest_code_c148454ea0294f85811ebe2d7e9f6872-3"></a>
+<a name="rest_code_c148454ea0294f85811ebe2d7e9f6872-4"></a><span class="n">sentences</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="rest_code_c148454ea0294f85811ebe2d7e9f6872-5"></a>
+<a name="rest_code_c148454ea0294f85811ebe2d7e9f6872-6"></a><span class="n">stop_words</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"portuguese"</span><span class="p">)</span> <span class="o">+</span>\
+<a name="rest_code_c148454ea0294f85811ebe2d7e9f6872-7"></a>             <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s2">"english"</span><span class="p">)</span>
+<a name="rest_code_c148454ea0294f85811ebe2d7e9f6872-8"></a>
+<a name="rest_code_c148454ea0294f85811ebe2d7e9f6872-9"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+<a name="rest_code_c148454ea0294f85811ebe2d7e9f6872-10"></a>    <span class="n">clean_text</span> <span class="o">=</span> <span class="n">gensim</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">simple_preprocess</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<a name="rest_code_c148454ea0294f85811ebe2d7e9f6872-11"></a>    <span class="n">clean_text</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">clean_text</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stop_words</span><span class="p">]</span>
+<a name="rest_code_c148454ea0294f85811ebe2d7e9f6872-12"></a>    <span class="n">sentences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clean_text</span><span class="p">)</span>
 </pre></td>
 </tr></table>
 <p>Explicando as etapas do código acima:</p>
@@ -151,17 +151,17 @@ converter numa lista de">
 <div class="section" id="facilitando-as-coisas">
 <h2>Facilitando as coisas</h2>
 <p>Para dar maior foco ao que importa, salvei a lista de termos usando o pickle:</p>
-<pre class="code python"><a name="rest_code_ab5c2cc3b9be462f94e3beb74ecd9d9d-1"></a><span class="kn">import</span> <span class="nn">pickle</span>
-<a name="rest_code_ab5c2cc3b9be462f94e3beb74ecd9d9d-2"></a>
-<a name="rest_code_ab5c2cc3b9be462f94e3beb74ecd9d9d-3"></a><span class="c1"># salvando em arquivo</span>
-<a name="rest_code_ab5c2cc3b9be462f94e3beb74ecd9d9d-4"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"sentences.pickle"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-<a name="rest_code_ab5c2cc3b9be462f94e3beb74ecd9d9d-5"></a>   <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-<a name="rest_code_ab5c2cc3b9be462f94e3beb74ecd9d9d-6"></a>   <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-<a name="rest_code_ab5c2cc3b9be462f94e3beb74ecd9d9d-7"></a>
-<a name="rest_code_ab5c2cc3b9be462f94e3beb74ecd9d9d-8"></a><span class="c1"># lendo do arquivo</span>
-<a name="rest_code_ab5c2cc3b9be462f94e3beb74ecd9d9d-9"></a><span class="n">sentences</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
-<a name="rest_code_ab5c2cc3b9be462f94e3beb74ecd9d9d-10"></a>   <span class="nb">open</span><span class="p">(</span><span class="s2">"sentences.pickle"</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span>
-<a name="rest_code_ab5c2cc3b9be462f94e3beb74ecd9d9d-11"></a><span class="p">)</span>
+<pre class="code python"><a name="rest_code_4bf4b336c2024d15a6bd05e2583c1fc1-1"></a><span class="kn">import</span> <span class="nn">pickle</span>
+<a name="rest_code_4bf4b336c2024d15a6bd05e2583c1fc1-2"></a>
+<a name="rest_code_4bf4b336c2024d15a6bd05e2583c1fc1-3"></a><span class="c1"># salvando em arquivo</span>
+<a name="rest_code_4bf4b336c2024d15a6bd05e2583c1fc1-4"></a><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"sentences.pickle"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<a name="rest_code_4bf4b336c2024d15a6bd05e2583c1fc1-5"></a>   <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+<a name="rest_code_4bf4b336c2024d15a6bd05e2583c1fc1-6"></a>   <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<a name="rest_code_4bf4b336c2024d15a6bd05e2583c1fc1-7"></a>
+<a name="rest_code_4bf4b336c2024d15a6bd05e2583c1fc1-8"></a><span class="c1"># lendo do arquivo</span>
+<a name="rest_code_4bf4b336c2024d15a6bd05e2583c1fc1-9"></a><span class="n">sentences</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+<a name="rest_code_4bf4b336c2024d15a6bd05e2583c1fc1-10"></a>   <span class="nb">open</span><span class="p">(</span><span class="s2">"sentences.pickle"</span><span class="p">,</span> <span class="s2">"rb"</span><span class="p">)</span>
+<a name="rest_code_4bf4b336c2024d15a6bd05e2583c1fc1-11"></a><span class="p">)</span>
 </pre>
 </div>
 <div class="section" id="footnotes">
@@ -176,8 +176,9 @@ converter numa lista de">
 <td>stop words são as palavras sem valor semântico ao que pretendemos fazer, são palavras como "eu", "está", "era", "têm", etc. São palavras de uso tão comum e frequente que acabaria por ofuscar a presença de palavras mais relevantes no processo de classificação de textos por exemplo, afinal para saber o sentido de frases como "Alan Turing é o pai da ciência da computação" basta apenas as palavras ["Alan", "Turing", "pai", "ciência", "computação"], isso é o que basta para uma máquina.</td>
 </tr></tbody>
 </table>
-<div class="notebook">
-    <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/preprocessing.py">code</a>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">link para <a class="reference external" href="http://www.github.com/demacdolincoln/anotacoes-nlp/blob/src/files/preprocessing.py">o código</a></p>
 </div>
 </div>
 </div>
@@ -214,7 +215,7 @@ converter numa lista de">
     <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
-        </section></article><script>var disqus_shortname="demacdolincoln";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script></main><footer id="footer"><p>Contents © 2018         <a href="mailto:demacdolincoln@gmail.com">Lincoln de Macêdo</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+        </section></article><script>var disqus_shortname="demacdolincoln";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script></main><footer id="footer"><p>Contents © 2019         <a href="mailto:demacdolincoln@gmail.com">Lincoln de Macêdo</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
             
         </footer>
 </div>

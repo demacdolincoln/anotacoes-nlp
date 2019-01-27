@@ -20,8 +20,10 @@ Pretendo fazer uma longa série de posts sobre NLP, não sou especialista nisso 
     * *notas finais e comparações entre métodos*
 
 * parte 2: classificação
-    * `classificação 1: introdução <link://filename/posts/classificacao-1.rst>`_
-    * *classificacao 2: CNN*
+    * `Classificação 1: introdução <link://filename/posts/classificacao-1.rst>`_
+    * `Classificacao 2: CNN <link//filename/posts/classificacao-2-cnn.rst>`_
+    * `Classificação 3: RNN parte 1 <link//filename/posts/classificacao-3-rnn-parte-1.rst>`_
+    * `Classificação 4: RNN parte 2 (+ convolução) <link//filename/posts/classificacao-4-rnn-parte-2-+-convolucao.rst>`_
 
 * parte 3: modelagem
     * `resumos 0: pagerank <link://filename/posts/resumos-0-pagerank.rst>`_

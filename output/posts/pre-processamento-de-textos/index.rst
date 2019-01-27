@@ -84,8 +84,5 @@ footnotes
 
 .. [1] stop words são as palavras sem valor semântico ao que pretendemos fazer, são palavras como "eu", "está", "era", "têm", etc. São palavras de uso tão comum e frequente que acabaria por ofuscar a presença de palavras mais relevantes no processo de classificação de textos por exemplo, afinal para saber o sentido de frases como "Alan Turing é o pai da ciência da computação" basta apenas as palavras \["Alan", "Turing", "pai", "ciência", "computação"\], isso é o que basta para uma máquina.
 
-.. raw:: html
 
-    <div class="notebook">
-        <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/preprocessing.py">code</a>
-    </div>
+.. note:: link para `o código <http://www.github.com/demacdolincoln/anotacoes-nlp/blob/src/files/preprocessing.py>`_

@@ -432,3 +432,8 @@ pre.code, code {
     padding-left: 26%;
     text-transform: uppercase;
 }
+
+.admonition.note {
+    color: black;
+    background-color: #dbdbdbe6;
+}

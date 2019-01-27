@@ -79,32 +79,32 @@
 <h2>preparação dos dados</h2>
 <p>Como nosso objetivo é fazer com que uma rede neural receba as palavras de contexto e indique a palavra central, e na anotação anterior fiz uma pequena observação dizendo que sempre teremos $2w$ palavras de contexto para cada palavra central e assim faremos, vamos modificar um pouco o código que cria os pares do word2vec:</p>
 <table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_b681d05195e54117935d1c2ab3132375-1"> 1</a>
-<a href="#rest_code_b681d05195e54117935d1c2ab3132375-2"> 2</a>
-<a href="#rest_code_b681d05195e54117935d1c2ab3132375-3"> 3</a>
-<a href="#rest_code_b681d05195e54117935d1c2ab3132375-4"> 4</a>
-<a href="#rest_code_b681d05195e54117935d1c2ab3132375-5"> 5</a>
-<a href="#rest_code_b681d05195e54117935d1c2ab3132375-6"> 6</a>
-<a href="#rest_code_b681d05195e54117935d1c2ab3132375-7"> 7</a>
-<a href="#rest_code_b681d05195e54117935d1c2ab3132375-8"> 8</a>
-<a href="#rest_code_b681d05195e54117935d1c2ab3132375-9"> 9</a>
-<a href="#rest_code_b681d05195e54117935d1c2ab3132375-10">10</a>
-<a href="#rest_code_b681d05195e54117935d1c2ab3132375-11">11</a>
-<a href="#rest_code_b681d05195e54117935d1c2ab3132375-12">12</a>
-<a href="#rest_code_b681d05195e54117935d1c2ab3132375-13">13</a></pre></div></td>
-<td class="code"><pre class="code python"><a name="rest_code_b681d05195e54117935d1c2ab3132375-1"></a><span class="n">window</span> <span class="o">=</span> <span class="mi">2</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-2"></a><span class="n">pair_ids</span> <span class="o">=</span> <span class="p">[]</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-3"></a>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-4"></a><span class="n">text_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus_text</span><span class="p">)</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-5"></a>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-6"></a><span class="n">corpus_text</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">corpus_text</span><span class="p">)</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-7"></a><span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">window</span><span class="p">,</span> <span class="n">window</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">])</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-8"></a>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-9"></a><span class="k">for</span> <span class="n">center_word</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">text_size</span><span class="o">-</span><span class="n">window</span><span class="p">):</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-10"></a>    <span class="n">center_word_id</span> <span class="o">=</span> <span class="n">word2id</span><span class="p">[</span><span class="n">corpus_text</span><span class="p">[</span><span class="n">center_word</span><span class="p">]]</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-11"></a>    <span class="n">context_words</span> <span class="o">=</span> <span class="p">[</span><span class="n">word2id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">corpus_text</span><span class="p">[</span><span class="n">mask</span> <span class="o">+</span> <span class="n">center_word</span><span class="p">]]</span>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-12"></a>
-<a name="rest_code_b681d05195e54117935d1c2ab3132375-13"></a>    <span class="n">pair_ids</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">context_words</span><span class="p">,</span> <span class="n">center_word_id</span><span class="p">])</span>
+<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_050d6e70ec0b49cdadafd1a86c92674a-1"> 1</a>
+<a href="#rest_code_050d6e70ec0b49cdadafd1a86c92674a-2"> 2</a>
+<a href="#rest_code_050d6e70ec0b49cdadafd1a86c92674a-3"> 3</a>
+<a href="#rest_code_050d6e70ec0b49cdadafd1a86c92674a-4"> 4</a>
+<a href="#rest_code_050d6e70ec0b49cdadafd1a86c92674a-5"> 5</a>
+<a href="#rest_code_050d6e70ec0b49cdadafd1a86c92674a-6"> 6</a>
+<a href="#rest_code_050d6e70ec0b49cdadafd1a86c92674a-7"> 7</a>
+<a href="#rest_code_050d6e70ec0b49cdadafd1a86c92674a-8"> 8</a>
+<a href="#rest_code_050d6e70ec0b49cdadafd1a86c92674a-9"> 9</a>
+<a href="#rest_code_050d6e70ec0b49cdadafd1a86c92674a-10">10</a>
+<a href="#rest_code_050d6e70ec0b49cdadafd1a86c92674a-11">11</a>
+<a href="#rest_code_050d6e70ec0b49cdadafd1a86c92674a-12">12</a>
+<a href="#rest_code_050d6e70ec0b49cdadafd1a86c92674a-13">13</a></pre></div></td>
+<td class="code"><pre class="code python"><a name="rest_code_050d6e70ec0b49cdadafd1a86c92674a-1"></a><span class="n">window</span> <span class="o">=</span> <span class="mi">2</span>
+<a name="rest_code_050d6e70ec0b49cdadafd1a86c92674a-2"></a><span class="n">pair_ids</span> <span class="o">=</span> <span class="p">[]</span>
+<a name="rest_code_050d6e70ec0b49cdadafd1a86c92674a-3"></a>
+<a name="rest_code_050d6e70ec0b49cdadafd1a86c92674a-4"></a><span class="n">text_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus_text</span><span class="p">)</span>
+<a name="rest_code_050d6e70ec0b49cdadafd1a86c92674a-5"></a>
+<a name="rest_code_050d6e70ec0b49cdadafd1a86c92674a-6"></a><span class="n">corpus_text</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">corpus_text</span><span class="p">)</span>
+<a name="rest_code_050d6e70ec0b49cdadafd1a86c92674a-7"></a><span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">window</span><span class="p">,</span> <span class="n">window</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">])</span>
+<a name="rest_code_050d6e70ec0b49cdadafd1a86c92674a-8"></a>
+<a name="rest_code_050d6e70ec0b49cdadafd1a86c92674a-9"></a><span class="k">for</span> <span class="n">center_word</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">text_size</span><span class="o">-</span><span class="n">window</span><span class="p">):</span>
+<a name="rest_code_050d6e70ec0b49cdadafd1a86c92674a-10"></a>    <span class="n">center_word_id</span> <span class="o">=</span> <span class="n">word2id</span><span class="p">[</span><span class="n">corpus_text</span><span class="p">[</span><span class="n">center_word</span><span class="p">]]</span>
+<a name="rest_code_050d6e70ec0b49cdadafd1a86c92674a-11"></a>    <span class="n">context_words</span> <span class="o">=</span> <span class="p">[</span><span class="n">word2id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">corpus_text</span><span class="p">[</span><span class="n">mask</span> <span class="o">+</span> <span class="n">center_word</span><span class="p">]]</span>
+<a name="rest_code_050d6e70ec0b49cdadafd1a86c92674a-12"></a>
+<a name="rest_code_050d6e70ec0b49cdadafd1a86c92674a-13"></a>    <span class="n">pair_ids</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">context_words</span><span class="p">,</span> <span class="n">center_word_id</span><span class="p">])</span>
 </pre></td>
 </tr></table>
 <p>Assim feito, teremos algo como:</p>
@@ -195,52 +195,52 @@
 <h2>A rede neural</h2>
 <p>O que importa na rede neural neste método e no skip-gram é a camada <em>Embedding</em></p>
 <table class="codetable"><tr>
-<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-1"> 1</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-2"> 2</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-3"> 3</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-4"> 4</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-5"> 5</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-6"> 6</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-7"> 7</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-8"> 8</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-9"> 9</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-10">10</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-11">11</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-12">12</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-13">13</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-14">14</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-15">15</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-16">16</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-17">17</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-18">18</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-19">19</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-20">20</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-21">21</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-22">22</a>
-<a href="#rest_code_711fe1ba88cc4cbaafb806418ef3610c-23">23</a></pre></div></td>
-<td class="code"><pre class="code python"><a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-1"></a><span class="k">class</span> <span class="nc">CBOW</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">,</span> <span class="n">context_size</span><span class="p">):</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-3"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">CBOW</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-4"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-6"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span> <span class="o">=</span>  <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">emb_size</span><span class="o">*</span><span class="n">context_size</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-9"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">log_softmax</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LogSoftmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-11"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-12"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-13"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-14"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-15"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-16"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-17"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-18"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-19"></a>        <span class="k">return</span> <span class="n">out</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-20"></a>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-21"></a>    <span class="k">def</span> <span class="nf">get_word_emb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_id</span><span class="p">):</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-22"></a>        <span class="n">word</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([</span><span class="n">word_id</span><span class="p">])</span>
-<a name="rest_code_711fe1ba88cc4cbaafb806418ef3610c-23"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<td class="linenos"><div class="linenodiv"><pre><a href="#rest_code_516f988c5e9f4dada372e4408285acc7-1"> 1</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-2"> 2</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-3"> 3</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-4"> 4</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-5"> 5</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-6"> 6</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-7"> 7</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-8"> 8</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-9"> 9</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-10">10</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-11">11</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-12">12</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-13">13</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-14">14</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-15">15</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-16">16</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-17">17</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-18">18</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-19">19</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-20">20</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-21">21</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-22">22</a>
+<a href="#rest_code_516f988c5e9f4dada372e4408285acc7-23">23</a></pre></div></td>
+<td class="code"><pre class="code python"><a name="rest_code_516f988c5e9f4dada372e4408285acc7-1"></a><span class="k">class</span> <span class="nc">CBOW</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-2"></a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">,</span> <span class="n">context_size</span><span class="p">):</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-3"></a>        <span class="nb">super</span><span class="p">(</span><span class="n">CBOW</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-4"></a>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">emb_size</span><span class="p">)</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-6"></a>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span> <span class="o">=</span>  <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">emb_size</span><span class="o">*</span><span class="n">context_size</span><span class="p">,</span> <span class="mi">512</span><span class="p">)</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">)</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-9"></a>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-10"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">log_softmax</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">LogSoftmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-11"></a>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-12"></a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-13"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-14"></a>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-15"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear0</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-16"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear1</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-17"></a>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-18"></a>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-19"></a>        <span class="k">return</span> <span class="n">out</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-20"></a>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-21"></a>    <span class="k">def</span> <span class="nf">get_word_emb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_id</span><span class="p">):</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-22"></a>        <span class="n">word</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">([</span><span class="n">word_id</span><span class="p">])</span>
+<a name="rest_code_516f988c5e9f4dada372e4408285acc7-23"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 </pre></td>
 </tr></table>
 <p>O treinamento será demorado, afinal como já dito, este não é um código para produção, é apenas um código didático, então enquanto ocorre o treinamento, não é má idéia ir tomar um chá e caminhar um pouco.</p>
@@ -325,8 +325,9 @@
 </table>
 <p>Observando onde cada termo está com as dimensões da camada incorporada da rede neural reduzida a 2d temos:</p>
 <img alt="/images/word2vec-cbow-rank.png" src="../../images/word2vec-cbow-rank.png"><p>É compreensível ver estas distâncias tão em desarcodo pelo fato das distorções da redução de dimensões, de 10 para 2.</p>
-<div class="notebook">
-    <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/word2vec-2-cbow.ipynb">code</a>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">notebook usado: <a class="reference external" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/word2vec-2-cbow.ipynb">link para o nbviewer</a></p>
 </div>
 </div>
 </div>
@@ -363,7 +364,7 @@
     <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
-        </section></article><script>var disqus_shortname="demacdolincoln";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script></main><footer id="footer"><p>Contents © 2018         <a href="mailto:demacdolincoln@gmail.com">Lincoln de Macêdo</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
+        </section></article><script>var disqus_shortname="demacdolincoln";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script></main><footer id="footer"><p>Contents © 2019         <a href="mailto:demacdolincoln@gmail.com">Lincoln de Macêdo</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         </p>
             
         </footer>
 </div>

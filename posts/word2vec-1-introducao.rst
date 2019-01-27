@@ -146,8 +146,5 @@ suicídio          anos
 resultado         ter
 ================  ===========
 
-.. raw:: html
 
-    <div class="notebook">
-        <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/word2vec-1-introducao.ipynb">code</a>
-    </div>
+.. note:: notebook usado: `link para o nbviewer <http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/word2vec-1-introducao.ipynb>`_

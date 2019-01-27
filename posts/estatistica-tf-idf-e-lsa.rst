@@ -143,8 +143,5 @@ off-topic
 
 2. E para gerarmos aquele bag of words que está na moda temos algumas opções, dependendo do caso aplicamos só o **TF** para gerar um ranking, para outros casos o **TF-IDF** funciona melhor, especialmente quando juntamos vários textos como uma análise geral de várias páginas de blogs, o LSA tende a ser melhor em usos mais específicos porém nada impede de usa-lo para gerar o ranking de termos para um livro, por exemplo.
 
-.. raw:: html
 
-    <div class="notebook">
-        <a class="notebook-link" href="http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/estatistica-tf-idf-e-lsa.ipynb">code</a>
-    </div>
+.. note:: notebook usado: `link para o nbviewer <http://nbviewer.jupyter.org/github/demacdolincoln/anotacoes-nlp/blob/src/files/estatistica-tf-idf-e-lsa.ipynb>`_
