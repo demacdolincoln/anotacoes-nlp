@@ -10,10 +10,6 @@
   <lastmod>2019-01-27T04:37:00Z</lastmod>
  </sitemap>
  <sitemap>
-  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_cnn.xml</loc>
-  <lastmod>2018-12-25T16:11:00Z</lastmod>
- </sitemap>
- <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_seq2seq.xml</loc>
   <lastmod>2019-01-27T04:40:00Z</lastmod>
  </sitemap>
@@ -24,10 +20,6 @@
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cat_vetorizacao.xml</loc>
   <lastmod>2019-01-27T04:50:00Z</lastmod>
- </sitemap>
- <sitemap>
-  <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/classificacao.xml</loc>
-  <lastmod>2018-12-25T16:11:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/categories/cnn.xml</loc>
@@ -59,10 +51,10 @@
  </sitemap>
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/rss.xml</loc>
-  <lastmod>2019-01-27T04:50:00Z</lastmod>
+  <lastmod>2019-01-27T04:56:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://demacdolincoln.github.io/anotacoes-nlp/posts/sitemap.xml</loc>
-  <lastmod>2019-01-27T04:50:00Z</lastmod>
+  <lastmod>2019-01-27T04:56:00Z</lastmod>
  </sitemap>
 </sitemapindex>
